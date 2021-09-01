@@ -10,9 +10,8 @@ app.use(cors())
 // Routes
 app.use('/api/spotify/login', require('./src/Routes/loginRoute') )
 
-
 // Port declaration and listening
 const PORT = config.get("port")
-app.listen(PORT, () => console.log(`Listening to port ${PORT}`))
+app.listen(PORT, () => console.log(`Listening to port ${PORT}`) )
 
 
