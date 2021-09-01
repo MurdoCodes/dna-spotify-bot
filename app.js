@@ -4,7 +4,7 @@ const config = require(`config`)
 const express = require(`express`)
 const app = express()
 
-// Register Middlewares
+// Register Middleware
 app.use(cors())
 
 // Routes
