@@ -1,20 +1,17 @@
+// Require Modules
 const config = require(`config`)
-const mouseMove = require(`../Helpers/mouseMoveHelper`)
-const http = require('http')
-const chromeLauncher = require('chrome-launcher');
 const puppeteer = require(`puppeteer-extra`)
 const StealthPlugin = require(`puppeteer-extra-plugin-stealth`)
-const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
 const pluginProxy = require(`puppeteer-extra-plugin-proxy`)
-const Ua = require('puppeteer-extra-plugin-anonymize-ua')
-const ac = require(`@antiadmin/anticaptchaofficial`)
-const { PrivacyApi } = require(`privacy.com`)
 const UserAgent = require(`user-agents`)
 const userAgent = new UserAgent()
 
+// Require Helpers
+const helper = require("../Helpers/helper")
+const sendResponse = helper.sendResponse
+const mouseMove = helper.mouseMove
+
 // Config value declarations
-const antiCaptchaKey = config.get(`APIKeys.antiCaptchaKey`) // AntiCaptcha API Key
-const privacyApi = new PrivacyApi(config.get(`APIKeys.privacyApi`), false) // Privacy API Key
 const siteUrl = config.get(`siteUrl`) // Site Url
 
 // Use puppeteer modules
@@ -30,11 +27,19 @@ puppeteer.use(pluginProxy({
 
 // Export function
 exports.login = (req, res, next) => {
-    initBrowser(res)
-    res.send(`Login Controller`)
+    res.set({
+        'Cache-Control': 'no-cache',
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive'
+      })
+    res.flushHeaders()
+
+    sendResponse(res, `Initializing Request...`)
+    initBrowser(req.query, res)
+    next()
 }
 
-async function initBrowser(res){
+async function initBrowser(data, res){
     const args = [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -70,55 +75,55 @@ async function initBrowser(res){
 
     try{
         const goto = await page.goto(siteUrl, {waitUntil: 'networkidle2', timeout: 0})
-        loginProfile(browser, page, res) 
+        if(goto){
+            sendResponse(res, `Loading website to browser...`)
+            loginProfile(browser, page, data, res) 
+        }        
     }catch(error){
-        console.log("Error : " + error.message)
         await page.close()
         await browser.close()
-        // process.exit(1);
-        initBrowser(res)
+        console.log("Error : " + error.message)
+        sendResponse(res, `Failed to load website! Retrying...`)
+        initBrowser(data, res)
     }
-
-    // if(goto === null){
-    //     await browser.close()
-    // }else{
-    //     loginProfile(browser, page)     
-    // }
 }
 
-async function loginProfile(browser, page, res){
-    const email = `e@disrupt.social`
-    const password = `Peacebro66!`
-    const musicTitle = `Permanent Holiday`
+async function loginProfile(browser, page, data, res) {
+    sendResponse(res, 'Successfully loaded spotify website...')
+
+    const email = data['email']
+    const password = data['password']
+    const musicTitle = data['musicTitle']    
 
     await page.waitForTimeout(2000)
     let loginUsername = "input[id='login-username']"
     await page.waitForSelector(loginUsername)
     await page.type(loginUsername, email, {delay:10})
-    // await res.send("Username successfully written...")
+    sendResponse(res, 'Username successfully written...')
 
     await page.waitForTimeout(2000)
     let loginPassword = "input[id='login-password']"
     await page.waitForSelector(loginPassword)
     await page.type(loginPassword, password, {delay:10})
-    // await res.send("Password successfully written...")
+    sendResponse(res, 'Password successfully written...')
 
     await page.waitForTimeout(2000)
     let loginButton = await page.$("#login-button")
     await loginButton.click()
-    // await res.send("Logging in...")
+    sendResponse(res, 'Logging in...')
 
     await page.waitForTimeout(2000)
     await page.waitForSelector("a[href='/search']")
+    sendResponse(res, 'Login Success...')
     let searchButton = await page.$("a[href='/search']")
     await searchButton.click()
-    // await res.send("Clicked search feature...")
+    sendResponse(res, 'Clicked search feature...')
 
     await page.waitForTimeout(2000)
     let searchInput = "input[data-testid='search-input']"
     await page.waitForSelector(searchInput)
     await page.type(searchInput, musicTitle, {delay:10})
-    // await res.send("Music title written...")
+    sendResponse(res, `Writing ${musicTitle} Title on search bar...`)
 
     await page.waitForTimeout(2000)
     let clickMusicContainerSelector = "#searchPage > div > div > section.e_GGK44JbOva9Ky8__wt._IVpo36IKHSqcCVm4A35 > div.WqyCHtsl8OKB9QUiAhq7 > div > div > div > div:nth-child(2) > div:nth-child(1) > div"
@@ -126,6 +131,7 @@ async function loginProfile(browser, page, res){
     await page
         .waitForSelector(clickMusicContainerSelector)
         .then(() => clickMusicContainerElement.click())
+    sendResponse(res, `${musicTitle} music selected... `)
 
     await page.waitForTimeout(2000)
     let clickMusicSelector = "#searchPage > div > div > section.e_GGK44JbOva9Ky8__wt._IVpo36IKHSqcCVm4A35 > div.WqyCHtsl8OKB9QUiAhq7 > div > div > div > div:nth-child(2) > div:nth-child(1) button"
@@ -133,19 +139,18 @@ async function loginProfile(browser, page, res){
     await page.waitForSelector(clickMusicSelector)
         .then(() => clickMusicElement.click())
     // await res.send("Plauing Music...")
+    sendResponse(res, `Playing ${musicTitle}... `)
 
-    await page.waitForTimeout(45000)
+    await page.waitForTimeout(60000)
     const trackTimeElement = await page.waitForSelector('div[data-testid="playback-position"]') // select the element
     const audioTime = await trackTimeElement.evaluate((element) => {         
         return element.textContent
     })
-    console.log(audioTime)
-    // await res.send(`Audio Time : ${audioTime}`)
-    // await res.send(`Logging Out...`)
+    sendResponse(res, `Music Time : ${audioTime}`)
     await page.waitForTimeout(2000)
+    sendResponse(res, `Logging out...`)
     await page.close()
     await browser.close()
-    // process.exit(1);
-    // await res.send(`Browser Closed... End Process...`)
-
+    await page.waitForTimeout(2000)
+    sendResponse(res, `Browser Closed... End Process...`)
 }
