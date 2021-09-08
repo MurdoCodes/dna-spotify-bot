@@ -13,7 +13,7 @@ const mouseMove = helper.mouseMove
 
 // Config value declarations
 const siteUrl = config.get(`siteUrl`) // Site Url
-
+ 
 // Use puppeteer modules
 puppeteer.use(StealthPlugin())
 puppeteer.use(pluginProxy({
@@ -50,7 +50,7 @@ async function initBrowser(data, res){
     ]    
     const options = {
         slowMo: 25,
-        headless: false,
+        headless: true,
         ignoreDefaultArgs: ['--mute-audio'],
         executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
         args
