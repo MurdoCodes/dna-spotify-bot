@@ -15,7 +15,8 @@ app.use(bodyParser.json())
 
 // Routes
 app.use('/api/spotify/users', require('./src/Routes/usersRoute') ) // Users Route
-app.use('/api/spotify/login', require('./src/Routes/loginRoute') ) // Login Route
+app.use('/api/spotify/login', require('./src/Routes/loginRoute') ) // Users Route
+app.use('/api/spotify/process', require('./src/Routes/processRoute') ) // Login Route
 
 // Error Handling
 app.use(( req, res ) => {

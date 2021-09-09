@@ -19,12 +19,13 @@ exports.fetchAllUsers = async (req, res, next) => {
 }
 
 exports.fetchSingleUser = async (req, res, next) => {
+    const id = req.params.id
     try{
-        const result = await Users.fetchSingleUser(req.params.id)
+        const result = await Users.fetchSingleUser(id)
         if(!result[0][0]){
-            res.status(200).json({message: `Cant find ID: ${req.params.id}. User doest not exist..`, result: result[0][0]})
+            res.status(200).json({message: `Cant find ID: ${id}. User doest not exist..`, result: result[0][0]})
         }else{
-            res.status(200).json({message: `ID:  ${req.params.id} found.`, result: result[0][0]})
+            res.status(200).json({message: `ID:  ${id} found.`, result: result[0][0]})
         }
     }catch (err){
         if(!err.statusCode){
@@ -35,34 +36,30 @@ exports.fetchSingleUser = async (req, res, next) => {
 }
 
 exports.createUser = async (req, res, next) => {
-
+    const {first_name, last_name, email, password} = req.body
     try{
-        const ifExistEmail = await Users.ifExistUser(req.body.email)
+        const ifExistEmail = await Users.ifExistUser(email)
         if(!ifExistEmail[0][0]){
-            const hashPassword = bcrypt.hashSync(req.body.password, salt)
+            const hashPassword = bcrypt.hashSync(password, salt)
             const key = uuidAPIKey.create()
             const uuid = key.uuid
             const apiKey = key.apiKey
 
             const data = {
-                "fname": req.body.first_name,
-                "lname": req.body.last_name,
-                "email": req.body.email,
+                "fname": first_name,
+                "lname": last_name,
+                "email": email,
                 "password": hashPassword,
                 "uuid": uuid,
                 "apiKey": apiKey
             }        
             const result = await Users.createNewUser(data)
             if(result){
-                res.status(200).json({message: `Email: ${data.email} does not exist Registraion Successful...`, affectedRows: result[0].affectedRows})
+                res.status(200).json({message: `Email: ${email} does not exist Registraion Successful...`, affectedRows: result[0].affectedRows})
             }
         }else{
             res.status(200).json({message: `Email already exist...`, result: ifExistEmail[0][0]})            
         }
-        
-               
-
-        
     }catch (err){
         if(!err.statusCode){
             err.statusCode = 500
@@ -72,12 +69,13 @@ exports.createUser = async (req, res, next) => {
 }
 
 exports.updateUser = async (req, res, next) => {
+    const {id, fname, lname, email} = req.body
     try{
-       const result = await Users.updateUser(req.body.id, req.body.fname, req.body.lname, req.body.email)
+       const result = await Users.updateUser(id, fname, lname, email)
        if(result[0].changedRows == 0){
-        res.status(200).json({message: `User id: ${req.body.id} not found. Update Failed.`, changedRows: result[0].changedRows})
+        res.status(200).json({message: `User id: ${id} not found. Update Failed.`, changedRows: result[0].changedRows})
        }else{
-        res.status(200).json({message: `User id: ${req.body.id} found. Successfully updated User.`, changedRows: result[0].changedRows})
+        res.status(200).json({message: `User id: ${id} found. Successfully updated User.`, changedRows: result[0].changedRows})
        }       
     }catch (err){
         if(!err.statusCode){
@@ -87,13 +85,14 @@ exports.updateUser = async (req, res, next) => {
     }
 }
 
-exports.deleteUser = async (req, res, next) => {
+exports.deleteSingleUser = async (req, res, next) => {
+    const id = req.params.id
     try{
-        const result = await Users.deleteUser(req.params.id)
+        const result = await Users.deleteUser(id)
         if(result[0].affectedRows == 0){
-            res.status(200).json({message: `User id: ${req.params.id} not found. Delete Failed.`, affectedRows: result[0].affectedRows})
+            res.status(200).json({message: `User id: ${id} not found. Delete Failed.`, affectedRows: result[0].affectedRows})
            }else{
-            res.status(200).json({message: `User id: ${req.params.id} found. Successfully deleted User.`, affectedRows: result[0].affectedRows})
+            res.status(200).json({message: `User id: ${id} found. Successfully deleted User.`, affectedRows: result[0].affectedRows})
            }    
     }catch (err){
         if(!err.statusCode){
@@ -117,4 +116,22 @@ exports.deleteAllUser = async (req, res, next) => {
         }
         res.status(err.statusCode).send(err.message)
     }
+}
+
+exports.loginUser = async (req, res, next) => {
+    const {email, password} = req.body
+    try{
+        const ifExistEmail = await Users.ifExistUser(email)
+        if(!ifExistEmail[0][0]){            
+            res.status(200).json({message: `Email: ${email} does not exist...`})
+        }else{
+            res.status(200).json({message: `Email already exist...`, result: ifExistEmail[0][0]})            
+        }
+    }catch (err){
+        if(!err.statusCode){
+            err.statusCode = 500
+        }
+        res.status(err.statusCode).send(err.message)
+    }
+    
 }

@@ -13,7 +13,7 @@ const mouseMove = helper.mouseMove
 
 // Config value declarations
 const siteUrl = config.get(`siteUrl`) // Site Url
-
+ 
 // Use puppeteer modules
 puppeteer.use(StealthPlugin())
 puppeteer.use(pluginProxy({
