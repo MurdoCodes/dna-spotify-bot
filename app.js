@@ -28,7 +28,7 @@ app.use(session({
 }))
 
 // Routes
-app.get(`/`, (req, res) => {
+app.get(`/`, (req, res) => { // Default Page
     if(req.session.user){
         res.send({
             LoggedIn: true,
@@ -40,12 +40,16 @@ app.get(`/`, (req, res) => {
         })
     }
 })
-app.get(`/logout`, (req, res) => {
+app.get(`/logout`, (req, res) => { // Logout
     req.session.destroy()
     res.clearCookie('userId')
     res.send({ msg: 'logging you out' })
 })
-app.use('/api/spotify/users', require('./src/Routes/usersRoute') ) // Users Route
+app.use('/api/users', require('./src/Routes/usersRoute') ) // App Users Route
+app.use('/api/spotify/users', require('./src/Routes/spotifyRoute'))
+
+
+
 app.use('/api/spotify/login', require('./src/Routes/loginRoute') ) // Users Route
 app.use('/api/spotify/process', require('./src/Routes/processRoute') ) // Login Route
 

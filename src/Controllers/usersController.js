@@ -51,33 +51,27 @@ exports.fetchSingleUser = async (req, res, next) => { // Fetch Single User
 exports.createUser = async (req, res, next) => { // Create User/Register
     const {first_name, last_name, email, password} = req.body
     try{
-        if(req.session.user){
-            const ifExistEmail = await Users.ifExistUser(email)
-            if(!ifExistEmail[0][0]){
-                const hashPassword = bcrypt.hashSync(password, salt)
-                const key = uuidAPIKey.create()
-                const uuid = key.uuid
-                const apiKey = key.apiKey
+        const ifExistEmail = await Users.ifExistUser(email)
+        if(!ifExistEmail[0][0]){
+            const hashPassword = bcrypt.hashSync(password, salt)
+            const key = uuidAPIKey.create()
+            const uuid = key.uuid
+            const apiKey = key.apiKey
 
-                const data = {
-                    "fname": first_name,
-                    "lname": last_name,
-                    "email": email,
-                    "password": hashPassword,
-                    "uuid": uuid,
-                    "apiKey": apiKey
-                }        
-                const result = await Users.createNewUser(data)
-                if(result){
-                    res.status(200).json({message: `Email: ${email} available. Registraion Successful...`, affectedRows: result[0].affectedRows})
-                }
-            }else{
-                res.status(200).json({message: `Email already exist...`})            
+            const data = {
+                "fname": first_name,
+                "lname": last_name,
+                "email": email,
+                "password": hashPassword,
+                "uuid": uuid,
+                "apiKey": apiKey
+            }        
+            const result = await Users.createNewUser(data)
+            if(result){
+                res.status(200).json({message: `Email: ${email} available. Registraion Successful...`, affectedRows: result[0].affectedRows})
             }
         }else{
-            res.send({
-                LoggedIn: false
-            })
+            res.status(200).json({message: `Email already exist...`})            
         }
         
     }catch (err){
