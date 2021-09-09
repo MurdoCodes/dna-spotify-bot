@@ -25,7 +25,7 @@ module.exports = class Users{
     }
 
     static ifExistUser(email){        
-        const query = `SELECT users_email FROM dns_spotify.users WHERE users_email = ( ? )`
+        const query = `SELECT * FROM dns_spotify.users WHERE users_email = ( ? )`
         return db.query(query, [email])
     }
 

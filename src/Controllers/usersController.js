@@ -55,10 +55,10 @@ exports.createUser = async (req, res, next) => {
             }        
             const result = await Users.createNewUser(data)
             if(result){
-                res.status(200).json({message: `Email: ${email} does not exist Registraion Successful...`, affectedRows: result[0].affectedRows})
+                res.status(200).json({message: `Email: ${email} available. Registraion Successful...`, affectedRows: result[0].affectedRows})
             }
         }else{
-            res.status(200).json({message: `Email already exist...`, result: ifExistEmail[0][0]})            
+            res.status(200).json({message: `Email already exist...`})            
         }
     }catch (err){
         if(!err.statusCode){
@@ -125,7 +125,15 @@ exports.loginUser = async (req, res, next) => {
         if(!ifExistEmail[0][0]){            
             res.status(200).json({message: `Email: ${email} does not exist...`})
         }else{
-            res.status(200).json({message: `Email already exist...`, result: ifExistEmail[0][0]})            
+            const hashPassword = ifExistEmail[0][0].users_password
+            console.log(hashPassword)
+            bcrypt.compare(password, hashPassword, (err, response) => {
+                if(response){
+                    res.status(200).json({message: `Successfully Logged In...`, result: response})
+                }else{
+                    res.status(200).json({message: `Wrong email/password combination...`, result: response})
+                }
+            })                      
         }
     }catch (err){
         if(!err.statusCode){
