@@ -2,8 +2,6 @@ module.exports = {
     sendResponse: function(res, message){
         console.log(message)        
         res.write(JSON.stringify({message: message}))
-        // `${message}!\n\n`
-        // res.status(200).json({message: `Email: available. Registraion Successful...`})
     },
     mouseMove: async function(element, page){
         try {

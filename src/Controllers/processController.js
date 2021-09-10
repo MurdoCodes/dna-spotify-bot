@@ -34,8 +34,6 @@ exports.login = (req, res, next) => {
       })
     res.flushHeaders()
 
-    // res.status(200).json({message: `Email: available. Registraion Successful...`})
-
     sendResponse(res, `Initializing Request...`)
     initBrowser(req.query, res)
     // next()
