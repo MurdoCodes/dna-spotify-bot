@@ -13,7 +13,7 @@ const mouseMove = helper.mouseMove
 
 // Config value declarations
 const siteUrl = config.get(`siteUrl`) // Site Url
- 
+
 // Use puppeteer modules
 puppeteer.use(StealthPlugin())
 puppeteer.use(pluginProxy({
@@ -34,9 +34,11 @@ exports.login = (req, res, next) => {
       })
     res.flushHeaders()
 
+    // res.status(200).json({message: `Email: available. Registraion Successful...`})
+
     sendResponse(res, `Initializing Request...`)
     initBrowser(req.query, res)
-    next()
+    // next()
 }
 
 async function initBrowser(data, res){
@@ -50,7 +52,7 @@ async function initBrowser(data, res){
     ]    
     const options = {
         slowMo: 25,
-        headless: true,
+        headless: false,
         ignoreDefaultArgs: ['--mute-audio'],
         executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
         args
@@ -130,15 +132,16 @@ async function loginProfile(browser, page, data, res) {
     let clickMusicContainerElement = await page.$(clickMusicContainerSelector)
     await page
         .waitForSelector(clickMusicContainerSelector)
-        .then(() => clickMusicContainerElement.click())
+        .then(() => mouseMove(clickMusicContainerElement, page) )
+        // clickMusicContainerElement.click()
+        
     sendResponse(res, `${musicTitle} music selected... `)
 
     await page.waitForTimeout(2000)
     let clickMusicSelector = "#searchPage > div > div > section.e_GGK44JbOva9Ky8__wt._IVpo36IKHSqcCVm4A35 > div.WqyCHtsl8OKB9QUiAhq7 > div > div > div > div:nth-child(2) > div:nth-child(1) button"
     let clickMusicElement = await page.$(clickMusicSelector)
     await page.waitForSelector(clickMusicSelector)
-        .then(() => clickMusicElement.click())
-    // await res.send("Plauing Music...")
+        .then(() => mouseMove(clickMusicElement, page))
     sendResponse(res, `Playing ${musicTitle}... `)
 
     await page.waitForTimeout(60000)

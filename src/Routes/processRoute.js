@@ -1,7 +1,7 @@
 const express = require(`express`)
 router = express.Router()
 
-loginController = require(`../Controllers/processController`)
+processController = require(`../Controllers/processController`)
 
-router.get(`/`, loginController.login)
+router.get(`/`, processController.login)
 module.exports = router

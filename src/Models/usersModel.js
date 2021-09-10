@@ -2,12 +2,6 @@ const config = require(`config`)
 const db = require('../../utils/dbConnect')
 
 module.exports = class Users{
-    // constructor(data) {        
-    //     this.fname = data.first_name
-    //     this.lname = data.last_name
-    //     this.email = data.email
-    //     this.password = data.password
-    // }
 
     static fetchAllUsers(){
         const query = 'SELECT * FROM dns_spotify.users'

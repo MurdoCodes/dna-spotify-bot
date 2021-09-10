@@ -46,12 +46,10 @@ app.get(`/logout`, (req, res) => { // Logout
     res.send({ msg: 'logging you out' })
 })
 app.use('/api/users', require('./src/Routes/usersRoute') ) // App Users Route
-app.use('/api/spotify/users', require('./src/Routes/spotifyRoute'))
+app.use('/api/spotify/users', require('./src/Routes/spotifyRoute')) // Spotify Users Route
+app.use(`/api/spotify/task`, require('./src/Routes/taskRoute')) // Task Route
 
-
-
-app.use('/api/spotify/login', require('./src/Routes/loginRoute') ) // Users Route
-app.use('/api/spotify/process', require('./src/Routes/processRoute') ) // Login Route
+app.use('/api/spotify/process', require('./src/Routes/processRoute') ) // Spotify Login/Process task Route
 
 // Error Handling
 app.use(( req, res ) => {

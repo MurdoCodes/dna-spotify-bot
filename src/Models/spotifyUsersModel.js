@@ -19,6 +19,11 @@ module.exports = class Users{
         return db.execute(query, [user_id, spotify_id])
     }
 
+    static fetchSpotifyUserId(user_id){
+        const query = `SELECT * FROM dns_spotify.spotify_users WHERE users_idusers = ?`
+        return db.execute(query, [user_id])
+    }
+
     static createNewUser(data){
         const query = `INSERT INTO dns_spotify.spotify_users (spotify_user_email, spotify_user_password, users_idusers) VALUES (?, ?, ?)`
         return db.execute(query, [data.email, data.password, data.users_id])
