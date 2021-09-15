@@ -1,13 +1,45 @@
-const mysql = require(`mysql2`)
+const mysql2 = require(`mysql2`)
+const mysql = require(`mysql`)
 const config = require(`config`)
 
-const pool = mysql.createPool({
+// const pool = mysql2.createPool({
+// 	host				: config.dbConfig.host,
+// 	port				: config.dbConfig.port,
+// 	user				: config.dbConfig.user,
+// 	password			: config.dbConfig.password,
+// 	database			: config.dbConfig.database,
+// 	multipleStatements	: config.dbConfig.multipleStatements,
+// 	waitForConnections: true,
+// 	connectionLimit: 10,
+// 	queueLimit: 0,
+// })
+
+// pool.getConnection((err, conn) => {
+// 	if(err) {
+// 		console.log(err)
+// 	}else{
+// 		console.log(`Connected to database : ` + conn.threadId);
+// 	}
+	
+// });
+
+// module.exports = pool.promise()
+
+
+const conn = mysql.createConnection({
 	host				: config.dbConfig.host,
-	user				: config.get("dbConfig.user"),
-	password			: config.get("dbConfig.pass"),
-	database			: config.get("dbConfig.dbname"),
-	multipleStatements	: config.get("dbConfig.multipleStatements")
+	port				: config.dbConfig.port,
+	user				: config.dbConfig.user,
+	password			: config.dbConfig.password,
+	database			: config.dbConfig.database,
+	multipleStatements	: config.dbConfig.multipleStatements,
 })
 
-// module.exports = pool
-module.exports = pool.promise()
+conn.connect((err) => {
+	if (err) {
+	  throw err;
+	}   
+	console.log('Succesfully Connected to the database...');
+})
+
+module.exports = conn

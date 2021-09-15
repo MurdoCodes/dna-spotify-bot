@@ -4,37 +4,93 @@ const db = require('../../utils/dbConnect')
 module.exports = class Task{
     
     static fetchAllTask(user_id){
-        const query = 'SELECT * FROM dns_spotify.spotify_task WHERE users_idusers = ?'
-        return db.execute(query, [user_id])
+        return new Promise((resolve, reject) => {
+            const query = 'SELECT * FROM ds_spotify_bot.spotify_task WHERE users_idusers = ?'
+            db.query(query, [user_id], (err, result) => {
+                if(err){
+                    return reject(err)
+                }else{
+                    return resolve(result)
+                }            
+            })
+        })
     }
 
     static fetchSingleTask(user_id, spotify_task_id){
-        const query = `SELECT * FROM dns_spotify.spotify_task WHERE users_idusers = ? && spotify_task_id = ?`
-        return db.execute(query, [user_id, spotify_task_id])
+        return new Promise((resolve, reject) => {
+            const query = `SELECT * FROM ds_spotify_bot.spotify_task WHERE users_idusers = ? && spotify_task_id = ?`
+            db.query(query, [user_id, spotify_task_id], (err, result) => {
+                if(err){
+                    return reject(err)
+                }else{
+                    return resolve(result)
+                }            
+            })
+        })
     }
 
     static createNewTask(data){
-        const query = `INSERT INTO dns_spotify.spotify_task (spotify_task_music_title, spotify_task_schedule, users_idusers, spotify_users_id) VALUES (?, ?, ?, ?)`
-        return db.execute(query, [data.musicTitle, data.taskSchedule, data.users_id, data.spotify_user_id])
+        return new Promise((resolve, reject) => {
+            const query = `INSERT INTO ds_spotify_bot.spotify_task (spotify_task_music_title, spotify_task_schedule, users_idusers, spotify_users_id) VALUES (?, ?, ?, ?)`
+            db.query(query, [data.musicTitle, data.taskSchedule, data.users_id, data.spotify_user_id], (err, result) => {
+                if(err){
+                    return reject(err)
+                }else{
+                    return resolve(result)
+                }            
+            })
+        })
     }
 
-    static ifExistTask(musicTitle, taskSchedule, userId, spotify_user_id){        
-        const query = `SELECT * FROM dns_spotify.spotify_task WHERE spotify_task_music_title = ? && spotify_task_schedule = ? && users_idusers = ? && spotify_users_id = ?`
-        return db.query(query, [musicTitle, taskSchedule, userId, spotify_user_id])
+    static ifExistTask(musicTitle, taskSchedule, userId, spotify_user_id){
+        return new Promise((resolve, reject) => {
+            const query = `SELECT * FROM ds_spotify_bot.spotify_task WHERE spotify_task_music_title = ? && spotify_task_schedule = ? && users_idusers = ? && spotify_users_id = ?`
+            db.query(query, [musicTitle, taskSchedule, userId, spotify_user_id], (err, result) => {
+                if(err){
+                    return reject(err)
+                }else{
+                    return resolve(result)
+                }            
+            })
+        })
     }
 
     static updateTask(musicTitle, taskSchedule, taskId){
-        const query = `UPDATE dns_spotify.spotify_task SET spotify_task_music_title = ?, spotify_task_schedule = ? WHERE spotify_task_id = ?`
-        return db.query(query, [musicTitle, taskSchedule, taskId])
+        return new Promise((resolve, reject) => {
+            const query = `UPDATE ds_spotify_bot.spotify_task SET spotify_task_music_title = ?, spotify_task_schedule = ? WHERE spotify_task_id = ?`
+            db.query(query, [musicTitle, taskSchedule, taskId], (err, result) => {
+                if(err){
+                    return reject(err)
+                }else{
+                    return resolve(result)
+                }            
+            })
+        })
     }
 
     static deleteTask(user_id, spotify_id){
-        const query = `DELETE FROM dns_spotify.spotify_task WHERE users_idusers = ? && spotify_task_id = ?`
-        return db.query(query, [user_id, spotify_id])
+        return new Promise((resolve, reject) => {
+            const query = `DELETE FROM ds_spotify_bot.spotify_task WHERE users_idusers = ? && spotify_task_id = ?`
+            db.query(query, [user_id, spotify_id], (err, result) => {
+                if(err){
+                    return reject(err)
+                }else{
+                    return resolve(result)
+                }            
+            })
+        })
     }
 
     static deleteAllTask(user_id){
-        const query = `DELETE FROM dns_spotify.spotify_task WHERE users_idusers = ?`
-        return db.query(query, [user_id])
+        return new Promise((resolve, reject) => {
+            const query = `DELETE FROM ds_spotify_bot.spotify_task WHERE users_idusers = ?`
+            db.query(query, [user_id], (err, result) => {
+                if(err){
+                    return reject(err)
+                }else{
+                    return resolve(result)
+                }            
+            })
+        })
     }
 }

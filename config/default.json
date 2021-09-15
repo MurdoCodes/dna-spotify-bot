@@ -9,10 +9,11 @@
         "password": "Peacebro66!"
     },
     "dbConfig":{
-        "host": "localhost",
-        "user": "root",
-        "pass": "kim123!@#",
-        "dbname": "dns_spotify",
+        "host"              : "ds-dev-db-intance.cabujorjhgfu.us-east-2.rds.amazonaws.com",
+        "port"              : "3306",
+        "user"              : "admin",
+        "password"          : "disruptsocialdevpassword",
+        "database"          : "ds_spotify_bot",
         "multipleStatements": true
     }
 }

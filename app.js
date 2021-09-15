@@ -3,6 +3,8 @@ const express = require(`express`)
 const session = require(`express-session`)
 const bodyParser = require(`body-parser`)
 
+const mysql = require(`mysql`)
+
 const config = require(`config`)
 const db = require('./utils/dbConnect')
 

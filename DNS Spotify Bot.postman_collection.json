@@ -1,0 +1,330 @@
+{
+	"variables": [],
+	"info": {
+		"name": "DNS Spotify Bot",
+		"_postman_id": "80fd34de-bd72-166d-5ff8-01320d656fdd",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "View All Users",
+			"request": {
+				"url": "http://localhost:5000/api/users/profile",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Users",
+			"request": {
+				"url": "http://localhost:5000/api/users/update",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 18,\n\t\"fname\": \"New First\",\n\t\"lname\": \"New Last\",\n\t\"email\": \"test@test.com\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Single User",
+			"request": {
+				"url": "http://localhost:5000/api/users/delete/17",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "View Single User",
+			"request": {
+				"url": "http://localhost:5000/api/users/profile/22",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"url": "http://localhost:5000/api/users/register",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"first_name\": \"Hello\",\n\t\"last_name\": \"Session\",\n\t\"email\": \"session@session.com\",\n\t\"password\": \"session\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete All Users",
+			"request": {
+				"url": "http://localhost:5000/api/users/delete",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"url": "http://localhost:5000/api/users/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"kim@kim.com\",\n\t\"password\": \"kim\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Default page",
+			"request": {
+				"url": "http://localhost:5000/",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"url": "http://localhost:5000/logout",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Spotify Account",
+			"request": {
+				"url": "http://localhost:5000/api/spotify/users/create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"test@test.com\",\n\t\"password\": \"test\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Spotify Users",
+			"request": {
+				"url": "http://localhost:5000/api/spotify/users/profile",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Spotify Singlle User",
+			"request": {
+				"url": "http://localhost:5000/api/spotify/users/profile/2",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Spotify Single User",
+			"request": {
+				"url": "http://localhost:5000/api/spotify/users/delete/2",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete All Spotify User",
+			"request": {
+				"url": "http://localhost:5000/api/spotify/users/delete",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Spotify Task",
+			"request": {
+				"url": "http://localhost:5000/api/spotify/task/create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"musicTitle\": \"Leave Out All The Rest\",\n\t\"taskSchedule\": \"2021-9-12 08:52:00\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch All Spotify Task",
+			"request": {
+				"url": "http://localhost:5000/api/spotify/task/",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Single Task",
+			"request": {
+				"url": "http://localhost:5000/api/spotify/task/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Spotify Task Update",
+			"request": {
+				"url": "http://localhost:5000/api/spotify/task/update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"taskId\": \"1\",\n\t\"musicTitle\": \"Edited Titles\",\n\t\"taskSchedule\": \"2021-10-12 08:52:00\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Spotify Task Delete",
+			"request": {
+				"url": "http://localhost:5000/api/spotify/task/delete/8",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Spotify Delete All",
+			"request": {
+				"url": "http://localhost:5000/api/spotify/task/delete",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Login/Playing Spotify",
+			"request": {
+				"url": {
+					"raw": "http://localhost:5000/api/spotify/process/?email=e@disrupt.social&password=blackhat87!&musicTitle=Leave%20Out%20All%20The%20Rest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"spotify",
+						"process",
+						""
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "e@disrupt.social",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "password",
+							"value": "blackhat87!",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "musicTitle",
+							"value": "Leave%20Out%20All%20The%20Rest",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
