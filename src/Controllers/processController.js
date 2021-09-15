@@ -52,7 +52,8 @@ async function initBrowser(data, res){
         slowMo: 25,
         headless: false,
         ignoreDefaultArgs: ['--mute-audio'],
-        executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        // executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        executablePath : '/usr/bin/google-chrome-stable',
         args
     }
 
@@ -82,7 +83,6 @@ async function initBrowser(data, res){
     }catch(error){
         await page.close()
         await browser.close()
-        console.log("Error : " + error.message)
         sendResponse(res, `Failed to load website! Retrying...`)
         initBrowser(data, res)
     }
@@ -111,6 +111,12 @@ async function loginProfile(browser, page, data, res) {
     let loginButton = await page.$("#login-button")
     await loginButton.click()
     sendResponse(res, 'Logging in...')
+
+    if(page.url() === siteUrl){
+        console.log('False')
+    }else{
+        sendResponse(res, 'Succesfully Logged in...')
+    }
 
     await page.waitForTimeout(2000)
     await page.waitForSelector("a[href='/search']")

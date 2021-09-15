@@ -10,7 +10,7 @@
 		{
 			"name": "Default page",
 			"request": {
-				"url": "http://localhost:5000/",
+				"url": "http://3.15.157.57:5000/",
 				"method": "GET",
 				"header": [],
 				"body": {},
@@ -21,7 +21,7 @@
 		{
 			"name": "Create User",
 			"request": {
-				"url": "http://localhost:5000/api/users/register",
+				"url": "http://3.15.157.57:5000/api/users/register",
 				"method": "POST",
 				"header": [
 					{
@@ -32,7 +32,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"first_name\": \"test\",\n\t\"last_name\": \"test\",\n\t\"email\": \"test@test.com\",\n\t\"password\": \"test\"\n}"
+					"raw": "{\n\t\"first_name\": \"test3\",\n\t\"last_name\": \"test3\",\n\t\"email\": \"test3@test.com\",\n\t\"password\": \"test\"\n}"
 				},
 				"description": ""
 			},
@@ -41,7 +41,7 @@
 		{
 			"name": "Users View All",
 			"request": {
-				"url": "http://localhost:5000/api/users/profile",
+				"url": "http://3.15.157.57:5000/api/users/profile",
 				"method": "GET",
 				"header": [],
 				"body": {},
@@ -52,7 +52,7 @@
 		{
 			"name": "User View Single",
 			"request": {
-				"url": "http://localhost:5000/api/users/profile/37",
+				"url": "http://3.15.157.57:5000/api/users/profile/37",
 				"method": "GET",
 				"header": [],
 				"body": {},
@@ -63,7 +63,7 @@
 		{
 			"name": "Users Update",
 			"request": {
-				"url": "http://localhost:5000/api/users/update",
+				"url": "http://3.15.157.57:5000/api/users/update",
 				"method": "PUT",
 				"header": [
 					{
@@ -83,7 +83,7 @@
 		{
 			"name": "Users Delete Single",
 			"request": {
-				"url": "http://localhost:5000/api/users/delete/34",
+				"url": "http://3.15.157.57:5000/api/users/delete/34",
 				"method": "DELETE",
 				"header": [],
 				"body": {},
@@ -94,7 +94,7 @@
 		{
 			"name": "Users Delete All Users",
 			"request": {
-				"url": "http://localhost:5000/api/users/delete",
+				"url": "http://3.15.157.57:5000/api/users/delete",
 				"method": "DELETE",
 				"header": [],
 				"body": {},
@@ -105,7 +105,7 @@
 		{
 			"name": "Users Login User",
 			"request": {
-				"url": "http://localhost:5000/api/users/login",
+				"url": "http://3.15.157.57:5000/api/users/login",
 				"method": "POST",
 				"header": [
 					{
@@ -116,7 +116,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\": \"kim@kim.com\",\n\t\"password\": \"kim\"\n}"
+					"raw": "{\n\t\"email\": \"test@test.com\",\n\t\"password\": \"test\"\n}"
 				},
 				"description": ""
 			},
@@ -125,7 +125,7 @@
 		{
 			"name": "Users Logout User",
 			"request": {
-				"url": "http://localhost:5000/logout",
+				"url": "http://3.15.157.57:5000/logout",
 				"method": "GET",
 				"header": [],
 				"body": {},
@@ -136,7 +136,7 @@
 		{
 			"name": "Spotify Create Account",
 			"request": {
-				"url": "http://localhost:5000/api/spotify/users/create",
+				"url": "http://3.15.157.57:5000/api/spotify/users/create",
 				"method": "POST",
 				"header": [
 					{
@@ -167,7 +167,7 @@
 		{
 			"name": "Spotify Fetch Single User",
 			"request": {
-				"url": "http://localhost:5000/api/spotify/users/profile/14",
+				"url": "http://3.15.157.57:5000/api/spotify/users/profile/14",
 				"method": "GET",
 				"header": [],
 				"body": {},
@@ -178,7 +178,7 @@
 		{
 			"name": "Spotify Delete Single User",
 			"request": {
-				"url": "http://localhost:5000/api/spotify/users/delete/14",
+				"url": "http://3.15.157.57:5000/api/spotify/users/delete/14",
 				"method": "DELETE",
 				"header": [],
 				"body": {},
@@ -189,7 +189,7 @@
 		{
 			"name": "Spotify  Delete All User",
 			"request": {
-				"url": "http://localhost:5000/api/spotify/users/delete",
+				"url": "http://3.15.157.57:5000/api/spotify/users/delete",
 				"method": "DELETE",
 				"header": [],
 				"body": {},
@@ -200,7 +200,7 @@
 		{
 			"name": "Spotify Task Create",
 			"request": {
-				"url": "http://localhost:5000/api/spotify/task/create",
+				"url": "http://3.15.157.57:5000/api/spotify/task/create",
 				"method": "POST",
 				"header": [
 					{
@@ -211,7 +211,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"spotify_user_id\": \"17\",\n\t\"musicTitle\": \"Test53\",\n\t\"taskSchedule\": \"2021-9-12 08:52:00\"\n}"
+					"raw": "{\n\t\"spotify_user_id\": \"17\",\n\t\"musicTitle\": \"Test2\",\n\t\"taskSchedule\": \"2021-9-12 08:52:00\"\n}"
 				},
 				"description": ""
 			},
@@ -220,7 +220,7 @@
 		{
 			"name": "Spotify Task Fetch All",
 			"request": {
-				"url": "http://localhost:5000/api/spotify/task/",
+				"url": "http://3.15.157.57:5000/api/spotify/task/",
 				"method": "GET",
 				"header": [],
 				"body": {},
@@ -231,7 +231,7 @@
 		{
 			"name": "Spotify Task Fetch Single Task",
 			"request": {
-				"url": "http://localhost:5000/api/spotify/task/12",
+				"url": "http://3.15.157.57:5000/api/spotify/task/9",
 				"method": "GET",
 				"header": [],
 				"body": {},
@@ -242,7 +242,7 @@
 		{
 			"name": "Spotify Task Update Task",
 			"request": {
-				"url": "http://localhost:5000/api/spotify/task/update",
+				"url": "http://3.15.157.57:5000/api/spotify/task/update",
 				"method": "POST",
 				"header": [
 					{
@@ -262,7 +262,7 @@
 		{
 			"name": "Spotify Task Delete Task",
 			"request": {
-				"url": "http://localhost:5000/api/spotify/task/delete/9",
+				"url": "http://3.15.157.57:5000/api/spotify/task/delete/9",
 				"method": "DELETE",
 				"header": [],
 				"body": {},
@@ -273,7 +273,7 @@
 		{
 			"name": "Spotify Task Delete All Task",
 			"request": {
-				"url": "http://localhost:5000/api/spotify/task/delete",
+				"url": "http://3.15.157.57:5000/api/spotify/task/delete",
 				"method": "DELETE",
 				"header": [],
 				"body": {},
@@ -285,10 +285,13 @@
 			"name": "Process Login/Playing Spotify",
 			"request": {
 				"url": {
-					"raw": "http://localhost:5000/api/spotify/process/?email=e@disrupt.social&password=blackhat87!&musicTitle=Leave%20Out%20All%20The%20Rest",
+					"raw": "http://3.15.157.57:5000/api/spotify/process/?email=e@disrupt.social&password=blackhat87!&musicTitle=Leave%20Out%20All%20The%20Rest",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"3",
+						"15",
+						"157",
+						"57"
 					],
 					"port": "5000",
 					"path": [
