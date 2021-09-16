@@ -35,11 +35,11 @@ exports.login = (req, res, next) => {
     res.flushHeaders()
 
     sendResponse(res, `Initializing Request...`)
-    initBrowser(req.query, res)
+    initBrowser(req.query, res, req)
     // next()
 }
 
-async function initBrowser(data, res){
+async function initBrowser(data, res, req){
     const args = [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -52,8 +52,8 @@ async function initBrowser(data, res){
         slowMo: 25,
         headless: false,
         ignoreDefaultArgs: ['--mute-audio'],
-        // executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-        executablePath : '/usr/bin/google-chrome-stable',
+        executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        // executablePath : '/usr/bin/google-chrome-stable',
         args
     }
 
@@ -78,22 +78,21 @@ async function initBrowser(data, res){
         const goto = await page.goto(siteUrl, {waitUntil: 'networkidle2', timeout: 0})
         if(goto){
             sendResponse(res, `Loading website to browser...`)
-            loginProfile(browser, page, data, res) 
+            loginProfile(browser, page, data, res, req) 
         }        
     }catch(error){
         await page.close()
         await browser.close()
         sendResponse(res, `Failed to load website! Retrying...`)
-        initBrowser(data, res)
+        initBrowser(data, res, req)
     }
 }
 
-async function loginProfile(browser, page, data, res) {
+async function loginProfile(browser, page, data, res, req) {
     sendResponse(res, 'Successfully loaded spotify website...')
 
     const email = data['email']
-    const password = data['password']
-    const musicTitle = data['musicTitle']    
+    const password = data['password'] 
 
     await page.waitForTimeout(2000)
     let loginUsername = "input[id='login-username']"
@@ -112,41 +111,83 @@ async function loginProfile(browser, page, data, res) {
     await loginButton.click()
     sendResponse(res, 'Logging in...')
 
-    if(page.url() === siteUrl){
-        console.log('False')
-    }else{
+    try {
+        await page.waitForSelector(`.alert-warning`, {timeout: 1000})
+        const alertElement = await page.$(".alert-warning > span")
+        const alertMessage = await page.evaluate(el => el.textContent, alertElement)
+        sendResponse(res, alertMessage)
+        await page.close()
+        await browser.close()
+        await page.waitForTimeout(2000)
+        sendResponse(res, `${alertMessage} Browser Closed! End process!`)
+        res.end('Failed!')
+
+    } catch (error) {
+        await page.waitForNavigation({ waitUntil: 'networkidle2' })             
         sendResponse(res, 'Succesfully Logged in...')
+        await dashboard(browser, page, data, res, req)
+    }    
+       
+}
+
+async function dashboard(browser, page, data, res, req){   
+    const musicTitle = data['musicTitle']
+    await page.waitForTimeout(2000)   
+
+    try {
+        await page.waitForSelector("a[href='/search']")
+        sendResponse(res, 'Login Success...')
+
+        let searchButton = await page.$("a[href='/search']")
+        await searchButton.click()
+        sendResponse(res, 'Clicked search feature...')
+
+    } catch (error) {
+        sendResponse(res, 'Element not found retry process...')
+        page.close()
+        browser.close()
+        initBrowser(data, res, req)
     }
 
-    await page.waitForTimeout(2000)
-    await page.waitForSelector("a[href='/search']")
-    sendResponse(res, 'Login Success...')
-    let searchButton = await page.$("a[href='/search']")
-    await searchButton.click()
-    sendResponse(res, 'Clicked search feature...')
+    try{
+        sendResponse(res, 'Clicked sub search feature...')
+        await page.waitForSelector(`#main > div > section > button`, {timeout: 1000})
+       
+        let subSearchButton = await page.$("#main > div > section > button")
+        await page.click(`#main > div > section > button`)   
+    }catch(error){
+        await page.waitForTimeout(2000)
+        let searchInput = "input[data-testid='search-input']"
+        await page.waitForSelector(searchInput)
+        await page.type(searchInput, musicTitle, {delay:10})
+        sendResponse(res, `Writing ${musicTitle} Title on search bar...`)
 
-    await page.waitForTimeout(2000)
-    let searchInput = "input[data-testid='search-input']"
-    await page.waitForSelector(searchInput)
-    await page.type(searchInput, musicTitle, {delay:10})
-    sendResponse(res, `Writing ${musicTitle} Title on search bar...`)
+        playMusic(browser, page, data, res, req)
+    }
+}
 
-    await page.waitForTimeout(2000)
-    let clickMusicContainerSelector = "#searchPage > div > div > section.e_GGK44JbOva9Ky8__wt._IVpo36IKHSqcCVm4A35 > div.WqyCHtsl8OKB9QUiAhq7 > div > div > div > div:nth-child(2) > div:nth-child(1) > div"
-    let clickMusicContainerElement = await page.$(clickMusicContainerSelector)
-    await page
-        .waitForSelector(clickMusicContainerSelector)
-        .then(() => mouseMove(clickMusicContainerElement, page) )
-        // clickMusicContainerElement.click()
+async function playMusic(browser, page, data, res, req){
+    const musicTitle = data['musicTitle']
+
+    await page.waitForTimeout(2000)   
+
+    try {
+        let clickMusicContainerSelector = "#searchPage > div > div > section.e_GGK44JbOva9Ky8__wt._IVpo36IKHSqcCVm4A35 > div.WqyCHtsl8OKB9QUiAhq7 > div > div > div > div:nth-child(2) > div:nth-child(1) > div"
+
+        await page.waitForSelector(clickMusicContainerSelector)
+
+        let clickMusicContainerElement = await page.$(clickMusicContainerSelector)
+
+        clickMusicContainerElement.click()
+        mouseMove(clickMusicContainerElement, page)
         
-    sendResponse(res, `${musicTitle} music selected... `)
-
-    await page.waitForTimeout(2000)
-    let clickMusicSelector = "#searchPage > div > div > section.e_GGK44JbOva9Ky8__wt._IVpo36IKHSqcCVm4A35 > div.WqyCHtsl8OKB9QUiAhq7 > div > div > div > div:nth-child(2) > div:nth-child(1) button"
-    let clickMusicElement = await page.$(clickMusicSelector)
-    await page.waitForSelector(clickMusicSelector)
-        .then(() => mouseMove(clickMusicElement, page))
-    sendResponse(res, `Playing ${musicTitle}... `)
+        sendResponse(res, `${musicTitle} music selected. Starting to play `)
+        await page.waitForTimeout(3000)
+        sendResponse(res, `Playing ${musicTitle}... `)
+    } catch (error) {
+        console.log(error)
+        res.end('Failed to play music!')
+    }
 
     await page.waitForTimeout(60000)
     const trackTimeElement = await page.waitForSelector('div[data-testid="playback-position"]') // select the element
@@ -154,10 +195,12 @@ async function loginProfile(browser, page, data, res) {
         return element.textContent
     })
     sendResponse(res, `Music Time : ${audioTime}`)
+
     await page.waitForTimeout(2000)
     sendResponse(res, `Logging out...`)
     await page.close()
     await browser.close()
     await page.waitForTimeout(2000)
     sendResponse(res, `Browser Closed... End Process...`)
+    res.end('It worked!')
 }

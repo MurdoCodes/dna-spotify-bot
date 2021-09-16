@@ -9,7 +9,9 @@ module.exports = {
             const x = box.x + (box.width/2)
             const y = box.y + (box.height/2)
             await page.mouse.move(x,y)
-            await page.mouse.click(x,y)
+            await page.mouse.click(x, y, { clickCount: 1})
+            await page.waitForTimeout(2000)
+            await page.mouse.click(x, y, { clickCount: 2, delay: 100 })
             return true
         }
         catch(e) {
