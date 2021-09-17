@@ -5,41 +5,34 @@ exports.createTask = async (req, res, next) => { // Create Task
     const {spotify_user_id, musicTitle, taskSchedule} = req.body
     
     try{
-        if(req.session.user){
-            const userId = req.session.user.idusers
-
-            if(!spotify_user_id){
-                res.status(200).json({message: `Please associate a spotify user for this task...`, status: false})
-            }else{
-                const ifExistTask = await Task.ifExistTask(musicTitle, taskSchedule, userId, spotify_user_id)
-
-                if(!ifExistTask[0]){
-                    const data = {
-                        "musicTitle": musicTitle,
-                        "taskSchedule": taskSchedule,
-                        "users_id": userId,
-                        "spotify_user_id": spotify_user_id
-                    }        
-                    const result = await Task.createNewTask(data)
-                    if(result){
-                        res.status(200).json({
-                            message: `Task succefully created..`,
-                            data: {
-                                "musicTitle": musicTitle,
-                                "taskSchedule": taskSchedule,
-                            },
-                            affectedRows: result.affectedRows,
-                            status: true
-                        })
-                    }
-                }else{
-                    res.status(200).json({message: `Task Already Exist...`, status: false})            
-                }
-            }
+        const userId = req.user.id
+        if(!spotify_user_id){
+            res.status(200).json({message: `Please associate a spotify user for this task...`, status: false})
         }else{
-            res.send({
-                LoggedIn: false
-            })
+            const ifExistTask = await Task.ifExistTask(musicTitle, taskSchedule, userId, spotify_user_id)
+
+            if(!ifExistTask[0]){
+                const data = {
+                    "musicTitle": musicTitle,
+                    "taskSchedule": taskSchedule,
+                    "users_id": userId,
+                    "spotify_user_id": spotify_user_id
+                }        
+                const result = await Task.createNewTask(data)
+                if(result){
+                    res.status(200).json({
+                        message: `Task succefully created..`,
+                        data: {
+                            "musicTitle": musicTitle,
+                            "taskSchedule": taskSchedule,
+                        },
+                        affectedRows: result.affectedRows,
+                        status: true
+                    })
+                }
+            }else{
+                res.status(200).json({message: `Task Already Exist...`, status: false})            
+            }
         }
         
     }catch (err){
@@ -52,17 +45,11 @@ exports.createTask = async (req, res, next) => { // Create Task
 
 exports.fetchAllTask = async (req, res, next) => { // Fetch All Task
     try{
-        if(req.session.user){
-            const allUsers = await Task.fetchAllTask(req.session.user.idusers)
-            if(!allUsers[0]){
-                res.status(200).json({message: `No task associated with this user...`, status: false})
-            }else{
-                res.status(200).json({message: `List of Users`, result: allUsers, status: true})
-            }            
+        const allUsers = await Task.fetchAllTask(req.user.id)
+        if(!allUsers[0]){
+            res.status(200).json({message: `No task associated with this user...`, status: false})
         }else{
-            res.send({
-                LoggedIn: false
-            })
+            res.status(200).json({message: `List of Users`, result: allUsers, status: true})
         }
     }catch (err){
         if(!err.statusCode){
@@ -75,17 +62,11 @@ exports.fetchAllTask = async (req, res, next) => { // Fetch All Task
 exports.fetchSingleTask = async (req, res, next) => { // Fetch Single Task
     const id = req.params.id
     try{
-        if(req.session.user){
-            const result = await Task.fetchSingleTask(req.session.user.idusers, id )
-            if(!result[0]){
-                res.status(200).json({message: `TASK ID: ${id} not found. Task does not exist..`, result: result[0], status: false})
-            }else{
-                res.status(200).json({message: `TASK ID: ${id} found.`, result: result[0], status: true})
-            }
+        const result = await Task.fetchSingleTask(req.user.id, id )
+        if(!result[0]){
+            res.status(200).json({message: `TASK ID: ${id} not found. Task does not exist..`, result: result[0], status: false})
         }else{
-            res.send({
-                LoggedIn: false
-            })
+            res.status(200).json({message: `TASK ID: ${id} found.`, result: result[0], status: true})
         }
     }catch (err){
         if(!err.statusCode){
@@ -98,18 +79,12 @@ exports.fetchSingleTask = async (req, res, next) => { // Fetch Single Task
 exports.updateTask = async (req, res, next) => { // Update Single Task
     const {taskId, musicTitle, taskSchedule} = req.body
     try{
-        if(req.session.user){
-            const result = await Task.updateTask(musicTitle, taskSchedule, taskId)
-            if(result.changedRows == 0){
-                res.status(200).json({message: `TASK ID: ${taskId} not found. Update Failed.`, changedRows: result.changedRows, status: false})
-            }else{
-                res.status(200).json({message: `TASK ID: ${taskId} found. Successfully updated task.`, changedRows: result.changedRows, status: true})
-            }
+        const result = await Task.updateTask(musicTitle, taskSchedule, taskId)
+        if(result.changedRows == 0){
+            res.status(200).json({message: `TASK ID: ${taskId} not found. Update Failed.`, changedRows: result.changedRows, status: false})
         }else{
-            res.send({
-                LoggedIn: false
-            })
-        }       
+            res.status(200).json({message: `TASK ID: ${taskId} found. Successfully updated task.`, changedRows: result.changedRows, status: true})
+        }   
     }catch (err){
         if(!err.statusCode){
             err.statusCode = 500
@@ -121,18 +96,12 @@ exports.updateTask = async (req, res, next) => { // Update Single Task
 exports.deleteSingleTask = async (req, res, next) => { // Delete Single Task
     const id = req.params.id
     try{
-        if(req.session.user){
-            const result = await Task.deleteTask(req.session.user.idusers, id)
-            if(result.affectedRows == 0){
-                res.status(200).json({message: `TASK ID: ${id} not found. Delete Failed.`, affectedRows: result.affectedRows, status: false})
-            }else{
-                res.status(200).json({message: `TASK ID: ${id} found. Successfully deleted User.`, affectedRows: result.affectedRows, status: true})
-            }
+        const result = await Task.deleteTask(req.user.id, id)
+        if(result.affectedRows == 0){
+            res.status(200).json({message: `TASK ID: ${id} not found. Delete Failed.`, affectedRows: result.affectedRows, status: false})
         }else{
-            res.send({
-                LoggedIn: false
-            })
-        }        
+            res.status(200).json({message: `TASK ID: ${id} found. Successfully deleted User.`, affectedRows: result.affectedRows, status: true})
+        }      
     }catch (err){
         if(!err.statusCode){
             err.statusCode = 500
@@ -143,17 +112,11 @@ exports.deleteSingleTask = async (req, res, next) => { // Delete Single Task
 
 exports.deleteAllTask = async (req, res, next) => { // Delete All Tasks
     try{
-        if(req.session.user){
-            const result = await Task.deleteAllTask(req.session.user.idusers)
-            if(result.affectedRows == 0){
-                res.status(200).json({message: `No more users to delete`, affectedRows: result.affectedRows})
-            }else{
-                res.status(200).json({message: `Successfully deleted all users`, affectedRows: result.affectedRows})
-            }
+        const result = await Task.deleteAllTask(req.user.id)
+        if(result.affectedRows == 0){
+            res.status(200).json({message: `No more users to delete`, affectedRows: result.affectedRows})
         }else{
-            res.send({
-                LoggedIn: false
-            })
+            res.status(200).json({message: `Successfully deleted all users`, affectedRows: result.affectedRows})
         }
     }catch (err){
         if(!err.statusCode){

@@ -1,5 +1,5 @@
 {
-  "name": "dna-spotify-bot",
+  "name": "dna-spotifybot",
   "version": "1.0.0",
   "description": "Playing music on spotify using bot",
   "main": "app.js",
@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+    "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.0",
     "puppeteer-extra": "^3.1.18",

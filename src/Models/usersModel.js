@@ -81,10 +81,10 @@ module.exports = class Users{
         })
     }
 
-    static deleteAllUsers(){
+    static deleteAllUsers(id){
         return new Promise((resolve, reject) => {
-            const query = `DELETE FROM ds_spotify_bot.users`
-            db.query(query, (err, result) => {
+            const query = `DELETE FROM ds_spotify_bot.users WHERE idusers NOT IN (?)`
+            db.query(query, [id], (err, result) => {
                 if(err){
                     return reject(err)
                 }else{

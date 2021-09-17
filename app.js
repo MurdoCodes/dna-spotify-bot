@@ -3,10 +3,9 @@ const express = require(`express`)
 const session = require(`express-session`)
 const bodyParser = require(`body-parser`)
 
-const mysql = require(`mysql`)
-
 const config = require(`config`)
-const db = require('./utils/dbConnect')
+const helper = require(`./src/Helpers/helper`)
+const authenticateToken = helper.authenticateToken
 
 // Create express app
 const app = express()
@@ -19,6 +18,8 @@ app.use(cors({
 }))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(express.json())
+
 app.use(session({    
     key: "userId",
     secret: "DNA Spotify Bot",
@@ -30,17 +31,11 @@ app.use(session({
 }))
 
 // Routes
-app.get(`/`, (req, res) => { // Default Page
-    if(req.session.user){
-        res.send({
-            LoggedIn: true,
-            user: req.session.user
-        })
-    }else{
-        res.send({
-            LoggedIn: false
-        })
-    }
+app.get(`/`, authenticateToken, (req, res) => { // Default Page
+    res.send({
+        LoggedIn: true,
+        user:req.user
+    })
 })
 app.get(`/logout`, (req, res) => { // Logout
     req.session.destroy()
