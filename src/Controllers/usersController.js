@@ -44,7 +44,6 @@ exports.fetchSingleUser = async (req, res, next) => { // Fetch Single User
 
 exports.createUser = async (req, res, next) => { // Create User/Register
     const {first_name, last_name, email, password} = req.body
-
     try{
         const ifExistEmail = await Users.ifExistUser(email)
         if(!ifExistEmail[0]){
@@ -52,17 +51,24 @@ exports.createUser = async (req, res, next) => { // Create User/Register
             const key = uuidAPIKey.create()
             const uuid = key.uuid
             const apiKey = key.apiKey
+
+            if(req.path === `/registerAdmin`){
+                role = "admin"
+            }else{
+                role = "basic"
+            }
             const data = {
-                "fname": first_name,
-                "lname": last_name,
-                "email": email,
+                "fname"   : first_name,
+                "lname"   : last_name,
+                "email"   : email,
                 "password": hashPassword,
-                "uuid": uuid,
-                "apiKey": apiKey
+                "role"    : role,
+                "uuid"    : uuid,
+                "apiKey"  : apiKey
             }
             const result = await Users.createNewUser(data)
             if(result){
-                res.status(200).json({message: `Email: ${email} available. Registraion Successful...`, affectedRows: result.affectedRows, status: true})
+                res.status(200).json({message: `Email: ${email} available. Registraion Successful...`, userRole: role, affectedRows: result.affectedRows, status: true})
             }
         }else{
             res.status(200).json({message: `Email already exist...`, status: false})
@@ -77,7 +83,7 @@ exports.createUser = async (req, res, next) => { // Create User/Register
 }
 
 exports.loginUser = async (req, res) => { // Login User
-    const {email, password} = req.body    
+    const {email, password} = req.body
     try{
         const result = await Users.ifExistUser(email)
         if(!result[0]){            
@@ -87,13 +93,14 @@ exports.loginUser = async (req, res) => { // Login User
                 "id"        : result[0].idusers,
                 "first_name": result[0].users_first_name,
                 "last_name" : result[0].users_email,
-                "dateCreate": result[0].user_date_time_created
+                "dateCreate": result[0].user_date_time_created,
+                "userRole"  : result[0].users_role
             }
             const hashPassword = result[0].users_password
             bcrypt.compare(password, hashPassword, (err, response) => {
                 if(response){
                     const accessToken = jwt.sign(tokenData, config.ACCESS_TOKEN_SECRET)
-                    res.status(200).json({message: `Successfully Logged In...`, accessToken: accessToken, status: response})
+                    res.status(200).json({message: `Successfully Logged In...`, accessToken: accessToken, data:tokenData,  status: response})
                 }else{
                     res.status(200).json({message: `Wrong email/password combination...`, status: response})
                 }
@@ -146,14 +153,41 @@ exports.deleteSingleUser = async (req, res, next) => { // Delete Single User
     }
 }
 
-exports.deleteAllUser = async (req, res, next) => { // Delete All Users    
+exports.deleteAllUser = async (req, res, next) => { // Delete All Users
     try{
-        const result = await Users.deleteAllUsers(req.user.id)
-        if(result.affectedRows == 0){
-            res.status(200).json({message: `No more users to delete`, affectedRows: result.affectedRows, status: true})
+        if(req.user.userRole === `basic`){
+            res.status(200).json({message: `Not allowed to delete users`, status: false})
         }else{
-            res.status(200).json({message: `Successfully deleted all users`, affectedRows: result.affectedRows, status: true})
+            const result = await Users.deleteAllUsers(req.user.id)
+            if(result.affectedRows == 0){
+                res.status(200).json({message: `No more users to delete`, affectedRows: result.affectedRows, status: true})
+            }else{
+                res.status(200).json({message: `Successfully deleted all users`, affectedRows: result.affectedRows, status: true})
+            }
         }
+        
+    }catch (err){
+        if(!err.statusCode){
+            err.statusCode = 500
+        }
+        res.status(err.statusCode).send(err.message)
+    }
+}
+
+exports.deleteSelected = async (req, res, next) => {
+    try{
+        if(req.user.userRole === `basic`){
+            res.status(200).json({message: `Not allowed to delete users`, status: false})
+        }else{
+            console.log(req.body)
+            // const result = await Users.deleteAllUsers(req.user.id)
+            // if(result.affectedRows == 0){
+            //     res.status(200).json({message: `No more users to delete`, affectedRows: result.affectedRows, status: true})
+            // }else{
+            //     res.status(200).json({message: `Successfully deleted all users`, affectedRows: result.affectedRows, status: true})
+            // }
+        }
+        
     }catch (err){
         if(!err.statusCode){
             err.statusCode = 500

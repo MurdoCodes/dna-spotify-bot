@@ -33,5 +33,12 @@ module.exports = {
             req.user = user
             next()
         })
+    },
+    authRole: (role) => {
+        return (req, res, next) => {
+            if(req.user.role === role){
+                
+            }
+        }
     }
 }
