@@ -10,8 +10,9 @@ const salt = bcrypt.genSaltSync(saltRounds)
 
 // Export function
 exports.fetchAllUsers = async (req, res, next) => { // Fetch All Users
+    const id = req.user.id
     try{
-        const allUsers = await Users.fetchAllUsers()
+        const allUsers = await Users.fetchAllUsers(id)
         if(!allUsers[0]){
             res.status(200).json({message: `No users available.`, results: allUsers.length, status: true})
         }else{
@@ -174,18 +175,23 @@ exports.deleteAllUser = async (req, res, next) => { // Delete All Users
     }
 }
 
-exports.deleteSelected = async (req, res, next) => {
+exports.deleteSelected = async (req, res, next) => { // Delete Multiple Users
     try{
         if(req.user.userRole === `basic`){
             res.status(200).json({message: `Not allowed to delete users`, status: false})
         }else{
-            console.log(req.body)
-            // const result = await Users.deleteAllUsers(req.user.id)
-            // if(result.affectedRows == 0){
-            //     res.status(200).json({message: `No more users to delete`, affectedRows: result.affectedRows, status: true})
-            // }else{
-            //     res.status(200).json({message: `Successfully deleted all users`, affectedRows: result.affectedRows, status: true})
-            // }
+            const obj = req.body
+            const arrayRes = []
+            Object.keys(obj).forEach(function(k){
+                arrayRes.push(obj[k])
+            })
+            
+            const result = Users.deleteMultipleUsers(arrayRes)
+            if(result.affectedRows == 0){
+                res.status(200).json({message: `No more users to delete`, affectedRows: result.affectedRows, status: true})
+            }else{
+                res.status(200).json({message: `Successfully deleted all users`, affectedRows: result.affectedRows, status: true})
+            }
         }
         
     }catch (err){

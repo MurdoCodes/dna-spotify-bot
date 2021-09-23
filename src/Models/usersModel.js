@@ -3,10 +3,10 @@ const db = require('../../utils/dbConnect')
 
 module.exports = class Users{
 
-    static fetchAllUsers(){
+    static fetchAllUsers(id){
         return new Promise((resolve, reject) => {
-            const query = 'SELECT idusers, users_first_name, users_last_name, users_email, user_date_time_created, users_role FROM ds_spotify_bot.users'
-            db.query(query, (err, result) => {
+            const query = 'SELECT idusers, users_first_name, users_last_name, users_email, user_date_time_created, users_role FROM ds_spotify_bot.users WHERE idusers NOT IN (?)'
+            db.query(query, [id],(err, result) => {
                 if(err){
                     return reject(err)
                 }else{
@@ -68,14 +68,28 @@ module.exports = class Users{
         })
     }
 
-    static deleteUser(id){        
+    static deleteUser(id){   
         return new Promise((resolve, reject) => {
-            const query = "DELETE FROM ds_spotify_bot.users WHERE idusers = ?"
-            db.query(query, [id, id], (err, result) => {
+            const query1 = `DELETE FROM ds_spotify_bot.spotify_task WHERE ds_spotify_bot.spotify_task.users_idusers = (?)`
+            db.query(query1, [id], (err, result) => {
                 if(err){
                     return reject(err)
                 }else{
-                    return resolve(result)
+                    const query2 = `DELETE FROM ds_spotify_bot.spotify_users WHERE ds_spotify_bot.spotify_users.users_idusers = (?)`           
+                    db.query(query2, [id], (err, result) => {
+                        if(err){
+                            return reject(err)
+                        }else{
+                            const query3 = `DELETE FROM ds_spotify_bot.users WHERE idusers = (?)`
+                            db.query(query3, [id], (err, result) => {
+                                if(err){
+                                    return reject(err)
+                                }else{
+                                    return resolve(result)
+                                }
+                            })
+                        }
+                    })                    
                 }            
             })
         })
@@ -110,17 +124,17 @@ module.exports = class Users{
 
     static deleteMultipleUsers(id){
         return new Promise((resolve, reject) => {
-            const query1 = `DELETE FROM ds_spotify_bot.spotify_task WHERE ds_spotify_bot.spotify_task.users_idusers IN (?)`
+            const query1 = `DELETE FROM ds_spotify_bot.spotify_task WHERE ds_spotify_bot.spotify_task.users_idusers IN ( ? )`
             db.query(query1, [id], (err, result) => {
                 if(err){
                     return reject(err)
                 }else{
-                    const query2 = `DELETE FROM ds_spotify_bot.spotify_users WHERE ds_spotify_bot.spotify_users.users_idusers IN (?)`           
+                    const query2 = `DELETE FROM ds_spotify_bot.spotify_users WHERE ds_spotify_bot.spotify_users.users_idusers IN ( ? )`           
                     db.query(query2, [id], (err, result) => {
                         if(err){
                             return reject(err)
                         }else{
-                            const query3 = `DELETE FROM ds_spotify_bot.users WHERE idusers IN (?)`
+                            const query3 = `DELETE FROM ds_spotify_bot.users WHERE ds_spotify_bot.users.idusers IN ( ? )`
                             db.query(query3, [id], (err, result) => {
                                 if(err){
                                     return reject(err)
