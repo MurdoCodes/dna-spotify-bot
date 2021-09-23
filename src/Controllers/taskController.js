@@ -125,3 +125,25 @@ exports.deleteAllTask = async (req, res, next) => { // Delete All Tasks
         res.status(err.statusCode).send(err.message)
     }
 }
+
+exports.deleteSelected = async (req, res, next) => { // Delete Multiple Users
+    try{
+        const obj = req.body
+        const arrayRes = []
+        Object.keys(obj).forEach(function(k){
+            arrayRes.push(obj[k])
+        })
+        
+        const result = Task.deleteMultipleUsers(arrayRes)
+        if(result.affectedRows == 0){
+            res.status(200).json({message: `No more Task to delete`, affectedRows: result.affectedRows, status: true})
+        }else{
+            res.status(200).json({message: `Successfully deleted all Task`, affectedRows: result.affectedRows, status: true})
+        }        
+    }catch (err){
+        if(!err.statusCode){
+            err.statusCode = 500
+        }
+        res.status(err.statusCode).send(err.message)
+    }
+}

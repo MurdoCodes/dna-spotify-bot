@@ -14,5 +14,6 @@ router.get(`/:id`, authenticateToken, taskController.fetchSingleTask) // Fetch S
 
 router.delete(`/delete`, authenticateToken, taskController.deleteAllTask) // Delete All Users
 router.delete(`/delete/:id`, authenticateToken, taskController.deleteSingleTask) // Delete Single User
+router.delete(`/deleteSelected`, authenticateToken, taskController.deleteSelected) // Delete All Users
 
 module.exports = router

@@ -93,4 +93,17 @@ module.exports = class Task{
             })
         })
     }
+
+    static deleteMultipleUsers(id){
+        return new Promise((resolve, reject) => {
+            const query = `DELETE FROM ds_spotify_bot.spotify_task WHERE ds_spotify_bot.spotify_task.spotify_task_id IN ( ${id} )`
+            db.query(query, [id], (err, result) => {
+                if(err){
+                    return reject(err)
+                }else{
+                    return resolve(result)
+                }     
+            })
+        })
+    }
 }
