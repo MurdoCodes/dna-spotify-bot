@@ -15,8 +15,9 @@ exports.createTask = async (req, res, next) => { // Create Task
                 const data = {
                     "musicTitle": musicTitle,
                     "taskSchedule": taskSchedule,
+                    "status": `PENDING`,
                     "users_id": userId,
-                    "spotify_user_id": spotify_user_id
+                    "spotify_user_id": spotify_user_id                    
                 }        
                 const result = await Task.createNewTask(data)
                 if(result){

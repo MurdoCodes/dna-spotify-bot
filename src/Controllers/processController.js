@@ -7,6 +7,7 @@ const UserAgent = require(`user-agents`)
 const userAgent = new UserAgent()
 
 // Require Helpers
+const Task = require(`../Models/taskModel`)
 const helper = require("../Helpers/helper")
 const sendResponse = helper.sendResponse
 const mouseMove = helper.mouseMove
@@ -112,7 +113,7 @@ async function loginProfile(browser, page, data, res, req) {
     sendResponse(res, 'Logging in...')
 
     try {
-        await page.waitForSelector(`.alert-warning`, {timeout: 1000})
+        await page.waitForSelector(`.alert-warning`, {timeout: 3000})
         const alertElement = await page.$(".alert-warning > span")
         const alertMessage = await page.evaluate(el => el.textContent, alertElement)
         sendResponse(res, alertMessage)
@@ -121,7 +122,6 @@ async function loginProfile(browser, page, data, res, req) {
         await page.waitForTimeout(2000)
         sendResponse(res, `${alertMessage} Browser Closed! End process!`)
         res.end('Failed!')
-
     } catch (error) {
         await page.waitForNavigation({ waitUntil: 'networkidle2' })             
         sendResponse(res, 'Succesfully Logged in...')
@@ -197,10 +197,15 @@ async function playMusic(browser, page, data, res, req){
     sendResponse(res, `Music Time : ${audioTime}`)
 
     await page.waitForTimeout(2000)
-    sendResponse(res, `Logging out...`)
-    await page.close()
-    await browser.close()
-    await page.waitForTimeout(2000)
-    sendResponse(res, `Browser Closed... End Process...`)
-    res.end('It worked!')
+    const id = data['id']
+    const result = await Task.updateSingleTask( id )
+    
+    if(result){       
+        sendResponse(res, `Logging out...`)
+        await page.close()
+        await browser.close()
+        await page.waitForTimeout(2000)
+        sendResponse(res, `Browser Closed... End Process...`)
+        res.end('It worked!')
+    }    
 }

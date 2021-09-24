@@ -34,7 +34,7 @@ router.put(`/update`, authenticateToken, usersController.updateUser) // Update S
  * Delete Requests
  */
 router.delete(`/delete`, authenticateToken, usersController.deleteAllUser) // Delete All Users
-router.delete(`/deleteSelected`, authenticateToken, usersController.deleteSelected) // Delete Selected Users
+router.post(`/deleteSelected`, authenticateToken, usersController.deleteSelected) // Delete Selected Users
 router.delete(`/delete/:id`, authenticateToken, usersController.deleteSingleUser) // Delete Single User
 
 module.exports = router

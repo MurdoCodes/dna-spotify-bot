@@ -178,7 +178,7 @@ exports.deleteAllUser = async (req, res, next) => { // Delete All Users
 exports.deleteSelected = async (req, res, next) => { // Delete Multiple Users
     try{
         if(req.user.userRole === `basic`){
-            res.status(200).json({message: `Not allowed to delete users`, status: false})
+            res.status(200).json({message: `Unable to delete currently used user.`, status: false})
         }else{
             const obj = req.body
             const arrayRes = []
