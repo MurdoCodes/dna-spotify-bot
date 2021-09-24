@@ -1,5 +1,5 @@
 {
-    "port"                  : 5001,
+    "port"                  : 5000,
     "host"                  : "localhost",
     "siteUrl"               : "https://accounts.spotify.com/en/login?continue=https:%2F%2Fopen.spotify.com%2F",
     "ProxyServer":{
