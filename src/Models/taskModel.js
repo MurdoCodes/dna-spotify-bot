@@ -5,7 +5,8 @@ module.exports = class Task{
     
     static fetchAllTask(user_id){
         return new Promise((resolve, reject) => {
-            const query = 'SELECT * FROM ds_spotify_bot.spotify_task INNER JOIN ds_spotify_bot.spotify_users ON ds_spotify_bot.spotify_users.users_idusers = ds_spotify_bot.spotify_task.users_idusers WHERE ds_spotify_bot.spotify_task.users_idusers = ?'
+            const query = 'SELECT * FROM ds_spotify_bot.spotify_task INNER JOIN ds_spotify_bot.spotify_users ON ds_spotify_bot.spotify_users.spotify_user_id = ds_spotify_bot.spotify_task.potify_users_id WHERE ds_spotify_bot.spotify_task.users_idusers = ?'
+
             db.query(query, [user_id], (err, result) => {
                 if(err){
                     return reject(err)
