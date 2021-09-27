@@ -63,7 +63,7 @@ exports.fetchAllTask = async (req, res, next) => { // Fetch All Task
 exports.fetchSingleTask = async (req, res, next) => { // Fetch Single Task
     const id = req.params.id
     try{
-        const result = await Task.fetchSingleTask(req.user.id, id )
+        const result = await Task.fetchSingleTask(req.user.id, id)
         if(!result[0]){
             res.status(200).json({message: `TASK ID: ${id} not found. Task does not exist..`, result: result[0], status: false})
         }else{
