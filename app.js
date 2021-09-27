@@ -13,7 +13,7 @@ const app = express()
 // Register Middleware
 app.use(cors({
     origin: "*",
-    method: "GET, POST, PUT, DELETE",
+    method: "GET,POST,PUT,DELETE",
     credentials: true
 }))
 app.use(bodyParser.urlencoded({ extended: true }))
