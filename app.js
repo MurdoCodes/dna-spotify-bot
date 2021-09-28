@@ -1,6 +1,7 @@
 const cors = require(`cors`)
 const express = require(`express`)
 const bodyParser = require(`body-parser`)
+const jwt = require(`jsonwebtoken`)
 
 const config = require(`config`)
 const scheduler = require(`./scheduler`)
@@ -20,16 +21,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(express.json())
 
-// Middleware
-// Add headers before the routes are defined
-// app.use(function (req, res, next) {
-//     //Enabling CORS
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization");
-//       next();
-//     });
-
 // Routes
 app.get(`/`, authenticateToken, (req, res) => { // Default Page
     res.send({
@@ -37,11 +28,12 @@ app.get(`/`, authenticateToken, (req, res) => { // Default Page
         user:req.user
     })
 })
-app.get(`/logout`, (req, res) => { // Logout
-    req.session.destroy()
-    res.clearCookie('userId')
-    res.send({ msg: 'logging you out' })
+app.get(`/logout`, authenticateToken, (req, res) => { // Logout
+    
+    const test = req.headers
+    console.log(test)
 })
+
 app.use('/api/users', require('./src/Routes/usersRoute') ) // App Users Route
 app.use('/api/spotify/users', require('./src/Routes/spotifyRoute')) // Spotify Users Route
 app.use(`/api/spotify/task`, require('./src/Routes/taskRoute')) // Task Route
