@@ -22,7 +22,10 @@ exports.createUser = async (req, res, next) => { // Create User/Register
         if(!err.statusCode){
             err.statusCode = 500
         }
-        res.status(err.statusCode).send(err.message)
+        res.status(err.statusCode).send({
+            message: err.message, 
+            status: false
+        })
     }
 }
 
@@ -38,7 +41,10 @@ exports.fetchAllUsers = async (req, res, next) => { // Fetch All Users
         if(!err.statusCode){
             err.statusCode = 500
         }
-        res.status(err.statusCode).json()
+        res.status(err.statusCode).send({
+            message: err.message, 
+            status: false
+        })
     }
 }
 
@@ -55,7 +61,10 @@ exports.fetchSingleUser = async (req, res, next) => { // Fetch Single User
         if(!err.statusCode){
             err.statusCode = 500
         }
-        res.status(err.statusCode).json()
+        res.status(err.statusCode).send({
+            message: err.message, 
+            status: false
+        })
     }
 }
 
@@ -95,7 +104,10 @@ exports.deleteSingleUser = async (req, res, next) => { // Delete Single User
         if(!err.statusCode){
             err.statusCode = 500
         }
-        res.status(err.statusCode).send(err.message)
+        res.status(err.statusCode).send({
+            message: err.message, 
+            status: false
+        })
     }
 }
 
@@ -122,13 +134,23 @@ exports.deleteSelected = async (req, res, next) => { // Delete Multiple Users
         Object.keys(obj).forEach(function(k){
             arrayRes.push(obj[k])
         })
-        
-        const result = Users.deleteMultipleUsers(arrayRes)
-        if(result.affectedRows == 0){
-            res.status(200).json({message: `No more profiles to delete`, affectedRows: result.affectedRows, status: true})
-        }else{
-            res.status(200).json({message: `Successfully deleted all profiles`, affectedRows: result.affectedRows, status: true})
-        }        
+
+        try{
+            const result = await Users.deleteMultipleUsers(arrayRes)
+            if(result.affectedRows == 0){
+                res.status(200).json({message: `No more profiles to delete`, status: true})
+            }else{
+                res.status(200).json({message: `Successfully deleted all profiles`, affectedRows: result.affectedRows, status: true})
+            }         
+        }catch (err){
+            if(!err.statusCode){
+                err.statusCode = 500
+            }
+            res.status(err.statusCode).send({
+                message: err.message, 
+                status: false
+            })
+        }    
     }catch (err){
         if(!err.statusCode){
             err.statusCode = 500
