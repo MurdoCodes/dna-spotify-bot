@@ -53,8 +53,8 @@ async function initBrowser(data, res, req){
         slowMo: 25,
         headless: false,
         ignoreDefaultArgs: ['--mute-audio'],
-        executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-        // executablePath : '/usr/bin/google-chrome-stable',
+        // executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        executablePath : '/usr/bin/google-chrome-stable',
         args
     }
 

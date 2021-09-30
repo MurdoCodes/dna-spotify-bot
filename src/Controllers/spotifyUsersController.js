@@ -102,7 +102,7 @@ exports.deleteSingleUser = async (req, res, next) => { // Delete Single User
         }           
     }catch (err){
         if(!err.statusCode){
-            err.statusCode = 500
+            err.statusCode = 200
         }
         res.status(err.statusCode).send({
             message: err.message, 
@@ -121,7 +121,7 @@ exports.deleteAllUser = async (req, res, next) => { // Delete All Users
         }
     }catch (err){
         if(!err.statusCode){
-            err.statusCode = 500
+            err.statusCode = 200
         }
         res.status(err.statusCode).send(err.message)
     }
@@ -144,7 +144,7 @@ exports.deleteSelected = async (req, res, next) => { // Delete Multiple Users
             }         
         }catch (err){
             if(!err.statusCode){
-                err.statusCode = 500
+                err.statusCode = 200
             }
             res.status(err.statusCode).send({
                 message: err.message, 
@@ -153,7 +153,7 @@ exports.deleteSelected = async (req, res, next) => { // Delete Multiple Users
         }    
     }catch (err){
         if(!err.statusCode){
-            err.statusCode = 500
+            err.statusCode = 200
         }
         res.status(err.statusCode).send(err.message)
     }
