@@ -28,10 +28,11 @@ app.get(`/`, authenticateToken, (req, res) => { // Default Page
         user:req.user
     })
 })
-app.get(`/logout`, authenticateToken, (req, res) => { // Logout
-    
-    const test = req.headers
-    console.log(test)
+app.get(`/logout`, authenticateToken, (req, res) => { // Logout    
+    res.cookie(`auth_token`, '', {maxAge: 1})
+    res.cookie(`auth._token_expiration.local`, '', {maxAge: 1})
+    res.cookie(`auth.strategy`, '', {maxAge: 1})    
+    res.status(200).json({message: `User Logged out!`, status: true})
 })
 
 app.use('/api/users', require('./src/Routes/usersRoute') ) // App Users Route
@@ -47,7 +48,7 @@ app.use(( req, res ) => {
 })
 
 // Cron Jobs
-// scheduler.tester(config.cronConfig)
+// scheduler.intiCron(config.cronConfig)
 
 // Port declaration and listening
 const PORT = config.get("port")

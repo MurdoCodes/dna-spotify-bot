@@ -1,21 +1,16 @@
 const cron = require(`node-cron`)
 const { resolve } = require(`path`)
 
-
 module.exports = {
-    initCrons: (config) => {
+    intiCron: (config) => {
         if(cron.validate(config.frequency)){
-            cron.schedule(config.frequency, () => {
-                console.log("Start Task")
+            cron.schedule(config.frequency, function() {
+                console.log("Start Process...")
                 const handler = require(resolve(config.handler))
                 handler()
             })
         }else{
-            console.log(`invalid`)
+            console.log(`Invalid Cron`)
         }
-    },
-    tester: (config) => {
-        const handler = require(resolve(config.handler))
-        handler()
     }
 }
