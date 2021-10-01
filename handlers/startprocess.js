@@ -2,6 +2,7 @@ const axios = require(`axios`)
 
 const Task = require(`../src/Models/taskModel`)
 const Users = require('../src/Models/spotifyUsersModel')
+const processController = require(`../src/Controllers/processController2`)
 
 module.exports = async () => {    
     const pendingTask = await Task.fetchPendingTasks()    
@@ -21,21 +22,13 @@ module.exports = async () => {
         let today = new Date()
 
         if(spotify_task_schedule < today){
-            let webApiUrl = `https://api-spotify.disrupt.social/api/spotify/process/?id=${spotify_task_id}&email=${spotify_user_email}&password=${spotify_user_password}&musicTitle=${spotify_task_music_title}`
-            console.log(webApiUrl)
-
-            axios.get(`https://api-spotify.disrupt.social/api/spotify/process/`, {
-                params:{
-                    id: spotify_task_id,
-                    email: spotify_user_email,
-                    password: spotify_user_password,
-                    musicTitle: spotify_task_music_title
-                }
-            }).then( () => {
-                console.log(response);
-            }).catch( (error) => {
-                console.log(error);
-            })
+            const data = {
+                id: spotify_task_id,
+                email: spotify_user_email,
+                password: spotify_user_password,
+                musicTitle: spotify_task_music_title
+            }
+            let test = await processController.login(data)
         }       
         
     })
