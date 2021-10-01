@@ -53,8 +53,8 @@ async function initBrowser(data, res, req){
         slowMo: 25,
         headless: false,
         ignoreDefaultArgs: ['--mute-audio'],
-        // executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-        executablePath : '/usr/bin/google-chrome-stable',
+        executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        // executablePath : '/usr/bin/google-chrome-stable',
         args
     }
 
@@ -112,21 +112,9 @@ async function loginProfile(browser, page, data, res, req) {
     await loginButton.click()
     sendResponse(res, 'Logging in...')
 
-    try {
-        await page.waitForSelector(`.alert-warning`, {timeout: 3000})
-        const alertElement = await page.$(".alert-warning > span")
-        const alertMessage = await page.evaluate(el => el.textContent, alertElement)
-        sendResponse(res, alertMessage)
-        await page.close()
-        await browser.close()
-        await page.waitForTimeout(2000)
-        sendResponse(res, `${alertMessage} Browser Closed! End process!`)
-        res.end('Failed!')
-    } catch (error) {
-        await page.waitForNavigation({ waitUntil: 'networkidle2' })             
-        sendResponse(res, 'Succesfully Logged in...')
-        await dashboard(browser, page, data, res, req)
-    }    
+    await page.waitForNavigation({ waitUntil: 'networkidle2' })             
+    sendResponse(res, 'Succesfully Logged in...')
+    await dashboard(browser, page, data, res, req)
        
 }
 
@@ -202,7 +190,6 @@ async function playMusic(browser, page, data, res, req){
     
     if(result){       
         sendResponse(res, `Logging out...`)
-        await page.close()
         await browser.close()
         await page.waitForTimeout(2000)
         sendResponse(res, `Browser Closed... End Process...`)

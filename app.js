@@ -48,7 +48,7 @@ app.use(( req, res ) => {
 })
 
 // Cron Jobs
-// scheduler.intiCron(config.cronConfig)
+scheduler.intiCron(config.cronConfig)
 
 // Port declaration and listening
 const PORT = config.get("port")
