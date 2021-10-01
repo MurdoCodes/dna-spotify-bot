@@ -78,9 +78,9 @@ exports.fetchSingleTask = async (req, res, next) => { // Fetch Single Task
 }
 
 exports.updateTask = async (req, res, next) => { // Update Single Task
-    const {taskId, musicTitle, taskSchedule} = req.body
+    const {taskId, musicTitle, taskSchedule, spotify_users_id} = req.body
     try{
-        const result = await Task.updateTask(musicTitle, taskSchedule, taskId)
+        const result = await Task.updateTask(musicTitle, taskSchedule, spotify_users_id, taskId)
         if(result.changedRows == 0){
             res.status(200).json({message: `TASK ID: ${taskId} not found. Update Failed.`, changedRows: result.changedRows, status: false})
         }else{

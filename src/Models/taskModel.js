@@ -85,10 +85,11 @@ module.exports = class Task{
         })
     }
 
-    static updateTask(musicTitle, taskSchedule, taskId){
+    static updateTask(musicTitle, taskSchedule, spotify_users_id, taskId){
         return new Promise((resolve, reject) => {
-            const query = `UPDATE ds_spotify_bot.spotify_task SET spotify_task_music_title = ?, spotify_task_schedule = ? WHERE spotify_task_id = ?`
-            db.query(query, [musicTitle, taskSchedule, taskId], (err, result) => {
+            const query = `UPDATE ds_spotify_bot.spotify_task SET spotify_task_music_title = ?, spotify_task_schedule = ?, spotify_users_id = ? WHERE spotify_task_id = ?`
+            
+            db.query(query, [musicTitle, taskSchedule, spotify_users_id, taskId], (err, result) => {
                 if(err){
                     return reject(err)
                 }else{
