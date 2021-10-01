@@ -6,7 +6,6 @@ module.exports = {
         if(cron.validate(config.frequency)){
             cron.schedule(config.frequency, function() {
                 console.log("Start Process...")
-                console.log(resolve(config.handler))
                 const handler = require(resolve(config.handler))
                 handler()
             })
