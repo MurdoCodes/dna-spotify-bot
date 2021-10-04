@@ -28,7 +28,7 @@ module.exports = async () => {
                 password: spotify_user_password,
                 musicTitle: spotify_task_music_title
             }
-            let test = await processController.login(data)
+            await processController.login(data)
         }       
         
     })
