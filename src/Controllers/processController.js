@@ -112,9 +112,26 @@ async function loginProfile(browser, page, data, res, req) {
     await loginButton.click()
     sendResponse(res, 'Logging in...')
 
-    // await page.waitForNavigation({ waitUntil: 'networkidle2' })             
-    // sendResponse(res, 'Succesfully Logged in...')
-    await dashboard(browser, page, data, res, req)
+    if(page.url() === siteUrl){
+        console.log('False')
+    }else{
+        try {
+            await page.waitForSelector(`.alert-warning`, {timeout: 1000})
+            const alertElement = await page.$(".alert-warning > span")
+            const alertMessage = await page.evaluate(el => el.textContent, alertElement)
+            sendResponse(res, alertMessage)
+            await page.close()
+            await browser.close()
+            await page.waitForTimeout(2000)
+            sendResponse(res, `${alertMessage} Browser Closed! End process!`)
+            res.end('Failed!')
+
+        } catch (error) {
+            await page.waitForNavigation({ waitUntil: 'networkidle2' })             
+            sendResponse(res, 'Succesfully Logged in...')
+            await dashboard(browser, page, data, res, req)
+        }
+    }
        
 }
 

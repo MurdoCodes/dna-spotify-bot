@@ -99,10 +99,9 @@ module.exports = class Task{
         })
     }
 
-    static updateSingleTask(taskId){
+    static updateSingleTask(status, taskId){
         
         return new Promise((resolve, reject) => {
-            const status = "COMPLETE"
             const query = `UPDATE ds_spotify_bot.spotify_task SET ds_spotify_bot.spotify_task.spotify_task_status = ? WHERE ds_spotify_bot.spotify_task.spotify_task_id = ?`
             db.query(query, [status, taskId], (err, result) => {
                 if(err){

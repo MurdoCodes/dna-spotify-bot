@@ -115,9 +115,29 @@ async function loginProfile(browser, page, data) {
     await loginButton.click()
     console.log('Logging in...')
 
-    await page.waitForNavigation({ waitUntil: 'networkidle2' })             
-    console.log('Succesfully Logged in...')
-    await dashboard(browser, page, data)
+    try {
+
+        await page.waitForSelector(`.alert-warning`, {timeout: 1000})
+        const alertElement = await page.$(".alert-warning > span")
+        const alertMessage = await page.evaluate(el => el.textContent, alertElement)
+        sendResponse(res, alertMessage)
+        const result = await Task.updateSingleTask( alertMessage, id )
+        await page.close()
+        await browser.close()
+
+        await page.close()
+        await browser.close()
+        await page.waitForTimeout(2000)
+        sendResponse(res, `${alertMessage} Browser Closed! End process!`)
+        res.end('Failed!')
+
+    } catch (error) {
+
+        await page.waitForNavigation({ waitUntil: 'networkidle2' })             
+        sendResponse(res, 'Succesfully Logged in...')
+        await dashboard(browser, page, data, res, req)
+
+    }
        
 }
 
@@ -189,7 +209,8 @@ async function playMusic(browser, page, data){
 
     await page.waitForTimeout(2000)
     const id = data['id']
-    const result = await Task.updateSingleTask( id )
+    const status = 'COMPLETED'
+    const result = await Task.updateSingleTask( status, id )
     
     if(result){       
         console.log(`Logging out...`)
