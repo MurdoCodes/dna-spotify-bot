@@ -3,6 +3,7 @@ const config = require(`config`)
 const puppeteer = require(`puppeteer-extra`)
 const StealthPlugin = require(`puppeteer-extra-plugin-stealth`)
 const pluginProxy = require(`puppeteer-extra-plugin-proxy`)
+var headless = require('headless');
 const UserAgent = require(`user-agents`)
 const userAgent = new UserAgent()
 
@@ -27,8 +28,19 @@ puppeteer.use(pluginProxy({
 
 // Export function
 exports.login = (data) => {
-    console.log(`Initializing Request...`)
-    initBrowser(data)
+    
+    // headless(200, function(err, childProcess, servernum) {
+    //     console.log('Xvfb running on server number', servernum)
+    //     console.log('Xvfb pid', childProcess.pid)        
+    // })
+
+    headless(function(err, childProcess, servernum) {
+        console.log(`Initializing Request...`)
+        console.log('Xvfb running on server number', servernum)
+        console.log('Xvfb pid', childProcess.pid)
+        console.log('err should be null', err)
+        initBrowser(data)
+    })
 }
 
 async function initBrowser(data){
@@ -44,8 +56,8 @@ async function initBrowser(data){
         slowMo: 25,
         headless: false,
         ignoreDefaultArgs: ['--mute-audio'],
-        executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-        // executablePath : '/usr/bin/google-chrome-stable',
+        // executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        executablePath : '/usr/bin/google-chrome-stable',
         args
     }
 

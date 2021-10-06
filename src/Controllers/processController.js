@@ -53,8 +53,8 @@ async function initBrowser(data, res, req){
         slowMo: 25,
         headless: false,
         ignoreDefaultArgs: ['--mute-audio'],
-        executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-        // executablePath : '/usr/bin/google-chrome-stable',
+        //executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        executablePath : '/usr/bin/google-chrome-stable',
         args
     }
 
@@ -112,8 +112,8 @@ async function loginProfile(browser, page, data, res, req) {
     await loginButton.click()
     sendResponse(res, 'Logging in...')
 
-    await page.waitForNavigation({ waitUntil: 'networkidle2' })             
-    sendResponse(res, 'Succesfully Logged in...')
+    // await page.waitForNavigation({ waitUntil: 'networkidle2' })             
+    // sendResponse(res, 'Succesfully Logged in...')
     await dashboard(browser, page, data, res, req)
        
 }
@@ -121,37 +121,40 @@ async function loginProfile(browser, page, data, res, req) {
 async function dashboard(browser, page, data, res, req){   
     const musicTitle = data['musicTitle']
     await page.waitForTimeout(2000)   
+    
+    const searchUrl = `https://open.spotify.com/search/${musicTitle}`
+    const goto = await page.goto(searchUrl, {waitUntil: 'networkidle2', timeout: 0})
+    playMusic(browser, page, data, res, req)
+    // try {
+        // await page.waitForSelector("a[href='/search']")
+        // sendResponse(res, 'Login Success...')
 
-    try {
-        await page.waitForSelector("a[href='/search']")
-        sendResponse(res, 'Login Success...')
+        // let searchButton = await page.$("a[href='/search']")
+        // await searchButton.click()
+        // sendResponse(res, 'Clicked search feature...')
 
-        let searchButton = await page.$("a[href='/search']")
-        await searchButton.click()
-        sendResponse(res, 'Clicked search feature...')
+    // } catch (error) {
+        // sendResponse(res, 'Element not found retry process...')
+        // page.close()
+        // browser.close()
+        // initBrowser(data, res, req)
+    // }
 
-    } catch (error) {
-        sendResponse(res, 'Element not found retry process...')
-        page.close()
-        browser.close()
-        initBrowser(data, res, req)
-    }
-
-    try{
-        sendResponse(res, 'Clicked sub search feature...')
-        await page.waitForSelector(`#main > div > section > button`, {timeout: 1000})
+    // try{
+    //     sendResponse(res, 'Clicked sub search feature...')
+    //     await page.waitForSelector(`#main > div > section > button`, {timeout: 1000})
        
-        let subSearchButton = await page.$("#main > div > section > button")
-        await page.click(`#main > div > section > button`)   
-    }catch(error){
-        await page.waitForTimeout(2000)
-        let searchInput = "input[data-testid='search-input']"
-        await page.waitForSelector(searchInput)
-        await page.type(searchInput, musicTitle, {delay:10})
-        sendResponse(res, `Writing ${musicTitle} Title on search bar...`)
+    //     let subSearchButton = await page.$("#main > div > section > button")
+    //     await page.click(`#main > div > section > button`)   
+    // }catch(error){
+    //     await page.waitForTimeout(2000)
+    //     let searchInput = "input[data-testid='search-input']"
+    //     await page.waitForSelector(searchInput)
+    //     await page.type(searchInput, musicTitle, {delay:10})
+    //     sendResponse(res, `Writing ${musicTitle} Title on search bar...`)
 
-        playMusic(browser, page, data, res, req)
-    }
+    //     playMusic(browser, page, data, res, req)
+    // }
 }
 
 async function playMusic(browser, page, data, res, req){

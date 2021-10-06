@@ -20,7 +20,7 @@
     "ACCESS_TOKEN_SECRET"   : "726acf1209a051584b24d208c6547ca854efec39c2615831a169c4ae77513b8c8834b442451c917454a8545a2f183b2fa076d13d9430a8468e3d82b97d396bc5",
     "REFRESH_TOKEN_SECRET"  : "13de1ef86ae7d0c53211970246b26be3360a49c6e4cda1118ec9295779b3673b99373e7b2d6941a5300bbf17973ba8ab2599ab024cc95ca7a06858e901430fad",
     "cronConfig": {
-        "frequency" : "*/20 * * * *",
+        "frequency" : "*/5 * * * *",
         "handler" : "handlers/startprocess.js"
     }
 }
