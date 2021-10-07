@@ -2,9 +2,9 @@ const config = require(`config`)
 const jwt = require(`jsonwebtoken`)
 
 module.exports = {
-    sendResponse: function(res, message){
+    sendResponse: function(message){
         console.log(message)        
-        res.write(JSON.stringify({message: message}))
+        // res.write(JSON.stringify({message: message}))
     },
     mouseMove: async function(element, page){
         try {

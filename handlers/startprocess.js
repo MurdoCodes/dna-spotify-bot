@@ -4,11 +4,10 @@ const Task = require(`../src/Models/taskModel`)
 const Users = require('../src/Models/spotifyUsersModel')
 const processController = require(`../src/Controllers/processController2`)
 
-module.exports = async () => {    
+module.exports = async () => {
     const pendingTask = await Task.fetchPendingTasks()    
 
     Object.keys(pendingTask).forEach(async (k) => {
-
         let result = pendingTask[k];
         let spotifyId = result.spotify_users_id
 
@@ -19,7 +18,7 @@ module.exports = async () => {
         let spotify_task_id = data.spotify_task_id
         let spotify_task_music_title = data.spotify_task_music_title
         let spotify_task_schedule = new Date(data.spotify_task_schedule)
-        let today = new Date()
+        let today = new Date()        
 
         if(spotify_task_schedule < today){
             const data = {

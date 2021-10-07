@@ -9,7 +9,8 @@ const userAgent = new UserAgent()
 
 // Require Helpers
 const Task = require(`../Models/taskModel`)
-const helper = require("../Helpers/helper")
+const helper = require("../Helpers/helper");
+const { sendResponse } = require('../Helpers/helper');
 const mouseMove = helper.mouseMove
 
 // Config value declarations
@@ -28,18 +29,20 @@ puppeteer.use(pluginProxy({
 
 // Export function
 exports.login = (data) => {
-    
-    // headless(200, function(err, childProcess, servernum) {
-    //     console.log('Xvfb running on server number', servernum)
-    //     console.log('Xvfb pid', childProcess.pid)        
-    // })
-
+    // const test = {
+    //     id: 193,
+    //     email: "kim@disruptsocial.net",
+    //     password: "tf7VW7RaEd7r",
+    //     musicTitle: "Leave Out All The Rest"
+    // }
     headless(function(err, childProcess, servernum) {
+        console.log(`##########################################`)
         console.log(`Initializing Request...`)
         console.log('Xvfb running on server number', servernum)
         console.log('Xvfb pid', childProcess.pid)
         console.log('err should be null', err)
         initBrowser(data)
+        console.log(`##########################################`)
     })
 }
 
@@ -51,6 +54,7 @@ async function initBrowser(data){
         '--disable-features=IsolateOrigins,site-per-process',
         '--autoplay-policy=no-user-gesture-required',
         `--user-agent=${userAgent}`,
+        '--use-gl=egl'
     ]    
     const options = {
         slowMo: 25,
@@ -73,6 +77,7 @@ async function initBrowser(data){
 
     await page.setViewport({ width: 1920, height: 937, deviceScaleFactor: 1, })
     await page.setDefaultTimeout(0)
+    await page.setDefaultNavigationTimeout(0)
 
     await page.evaluateOnNewDocument(() => {
         delete navigator.__proto__.webdriver;
@@ -120,7 +125,7 @@ async function loginProfile(browser, page, data) {
         await page.waitForSelector(`.alert-warning`, {timeout: 1000})
         const alertElement = await page.$(".alert-warning > span")
         const alertMessage = await page.evaluate(el => el.textContent, alertElement)
-        sendResponse(res, alertMessage)
+        sendResponse(alertMessage)
         const result = await Task.updateSingleTask( alertMessage, id )
         await page.close()
         await browser.close()
@@ -128,14 +133,13 @@ async function loginProfile(browser, page, data) {
         await page.close()
         await browser.close()
         await page.waitForTimeout(2000)
-        sendResponse(res, `${alertMessage} Browser Closed! End process!`)
-        res.end('Failed!')
+        sendResponse(`${alertMessage} Browser Closed! End process!`)
 
     } catch (error) {
 
         await page.waitForNavigation({ waitUntil: 'networkidle2' })             
-        sendResponse(res, 'Succesfully Logged in...')
-        await dashboard(browser, page, data, res, req)
+        sendResponse('Succesfully Logged in...')
+        await dashboard(browser, page, data)
 
     }
        
@@ -143,25 +147,24 @@ async function loginProfile(browser, page, data) {
 
 async function dashboard(browser, page, data){   
     const musicTitle = data['musicTitle']
-    await page.waitForTimeout(2000)   
-
+    await page.waitForTimeout(2000)
     try {
         await page.waitForSelector("a[href='/search']")
-        console.log('Login Success...')
+        sendResponse('Login Success...')
 
         let searchButton = await page.$("a[href='/search']")
         await searchButton.click()
-        console.log('Clicked search feature...')
+        sendResponse('Clicked search feature...')
 
     } catch (error) {
-        console.log('Element not found retry process...')
+        sendResponse('Element not found retry process...')
         page.close()
         browser.close()
         initBrowser(data)
     }
 
     try{
-        sendResponse(res, 'Clicked sub search feature...')
+        sendResponse('Clicked sub search feature...')
         await page.waitForSelector(`#main > div > section > button`, {timeout: 1000})
        
         let subSearchButton = await page.$("#main > div > section > button")
@@ -171,7 +174,7 @@ async function dashboard(browser, page, data){
         let searchInput = "input[data-testid='search-input']"
         await page.waitForSelector(searchInput)
         await page.type(searchInput, musicTitle, {delay:10})
-        console.log(`Writing ${musicTitle} Title on search bar...`)
+        sendResponse(`Writing ${musicTitle} Title on search bar...`)
 
         playMusic(browser, page, data)
     }
@@ -179,25 +182,20 @@ async function dashboard(browser, page, data){
 
 async function playMusic(browser, page, data){
     const musicTitle = data['musicTitle']
-
     await page.waitForTimeout(2000)   
 
     try {
         let clickMusicContainerSelector = "#searchPage > div > div > section.e_GGK44JbOva9Ky8__wt._IVpo36IKHSqcCVm4A35 > div.WqyCHtsl8OKB9QUiAhq7 > div > div > div > div:nth-child(2) > div:nth-child(1) > div"
-
         await page.waitForSelector(clickMusicContainerSelector)
-
         let clickMusicContainerElement = await page.$(clickMusicContainerSelector)
-
         clickMusicContainerElement.click()
-        mouseMove(clickMusicContainerElement, page)
-        
+        mouseMove(clickMusicContainerElement, page)        
         console.log(`${musicTitle} music selected. Starting to play `)
         await page.waitForTimeout(3000)
         console.log(`Playing ${musicTitle}... `)
     } catch (error) {
         console.log(error)
-        res.end('Failed to play music!')
+        sendResponse('Failed to play music!')
     }
 
     await page.waitForTimeout(60000)
