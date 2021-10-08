@@ -29,12 +29,6 @@ puppeteer.use(pluginProxy({
 
 // Export function
 exports.login = (data) => {
-    // const test = {
-    //     id: 193,
-    //     email: "kim@disruptsocial.net",
-    //     password: "tf7VW7RaEd7r",
-    //     musicTitle: "Leave Out All The Rest"
-    // }
     headless(function(err, childProcess, servernum) {
         console.log(`##########################################`)
         console.log(`Initializing Request...`)
