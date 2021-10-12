@@ -35,6 +35,7 @@ exports.login = (data) => {
         console.log('Xvfb running on server number', servernum)
         console.log('Xvfb pid', childProcess.pid)
         console.log('err should be null', err)
+        console.log(data)
         initBrowser(data)
         console.log(`##########################################`)
     })

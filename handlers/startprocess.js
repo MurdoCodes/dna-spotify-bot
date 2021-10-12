@@ -10,9 +10,9 @@ module.exports = async () => {
     Object.keys(pendingTask).forEach(async (k) => {
         let result = pendingTask[k];
         let spotifyId = result.spotify_users_id
-
         let singleUserData = await Task.fetchAllPendingUserTaskData(spotifyId)
         let data =  singleUserData[0]
+
         let spotify_user_email = data.spotify_user_email
         let spotify_user_password = data.spotify_user_password
         let spotify_task_id = data.spotify_task_id
@@ -27,6 +27,10 @@ module.exports = async () => {
                 password: spotify_user_password,
                 musicTitle: spotify_task_music_title
             }
+
+            console.log('"""""" DATA TO BE PROCESSED ########')
+            console.log(data)
+            console.log('"""""" DATA TO BE PROCESSED ########')
             await processController.login(data)
         }       
         

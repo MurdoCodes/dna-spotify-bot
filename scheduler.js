@@ -13,5 +13,9 @@ module.exports = {
         }else{
             console.log(`Invalid Cron`)
         }
+    },
+    init: () => {
+        const handler = require('./handlers/startprocess')
+        handler()
     }
 }

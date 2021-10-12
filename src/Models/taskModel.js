@@ -48,7 +48,7 @@ module.exports = class Task{
             const query = `SELECT * FROM ds_spotify_bot.spotify_users 
             INNER JOIN ds_spotify_bot.spotify_task 
             ON ds_spotify_bot.spotify_users.spotify_user_id = ds_spotify_bot.spotify_task.spotify_users_id 
-            WHERE ds_spotify_bot.spotify_users.spotify_user_id = (?)`
+            WHERE ds_spotify_bot.spotify_users.spotify_user_id = (?) && ds_spotify_bot.spotify_task.spotify_task_status <> 'COMPLETED'`
             db.query(query, [id], (err, result) => {
                 if(err){
                     return reject(err)
